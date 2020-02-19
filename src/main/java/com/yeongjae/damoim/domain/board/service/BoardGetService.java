@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class BoardGetService {
 
@@ -28,8 +29,9 @@ public class BoardGetService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
     public Board getBoard(Long id){
-        return boardRepository.fetchBoardById(id).orElseThrow(BoardNotFoundException::new);
+        Board board = boardRepository.fetchBoardById(id).orElseThrow(BoardNotFoundException::new);
+        board.updateHits();
+        return board;
     }
 }

@@ -1,6 +1,7 @@
 package com.yeongjae.damoim.domain.board.dto;
 
 import com.yeongjae.damoim.domain.board.entity.Board;
+import com.yeongjae.damoim.domain.board.entity.BoardImage;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import lombok.*;
 
@@ -35,11 +36,11 @@ public class BoardCreateDto {
                 .member(member)
                 .hits(0L)
                 .build();
-
-        if(imagePaths!=null) {
-            this.imagePaths.stream()
-                    .forEach((imagePath) -> board.addImage(imagePath));
-        }
+//
+//        if(imagePaths!=null) {
+//            this.imagePaths.stream()
+//                    .forEach((imagePath) -> board.addImage(imagePath));
+//        }
         return board;
     }
 }

@@ -18,6 +18,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
     @PersistenceContext
     private EntityManager entityManager;
     private QBoard board = QBoard.board;
+    private QBoardImage boardImage = QBoardImage.boardImage;
     private QReply reply = QReply.reply;
 
     public BoardRepositoryImpl(){
@@ -30,6 +31,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
         JPAQuery<Board> jpaQuery = new JPAQuery<>(entityManager);
         jpaQuery = jpaQuery.select(board)
                     .leftJoin(board.replyList, reply)
+                    .leftJoin(board.imagePaths, boardImage)
                     .fetchJoin()
                     .where(board.id.eq(board_id));
 

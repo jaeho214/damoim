@@ -2,7 +2,9 @@ package com.yeongjae.damoim.domain.board.service;
 
 import com.yeongjae.damoim.domain.board.dto.BoardUpdateDto;
 import com.yeongjae.damoim.domain.board.entity.Board;
+import com.yeongjae.damoim.domain.board.entity.BoardImage;
 import com.yeongjae.damoim.domain.board.exception.BoardNotFoundException;
+import com.yeongjae.damoim.domain.board.repository.BoardImageRepository;
 import com.yeongjae.damoim.domain.board.repository.BoardRepository;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
@@ -14,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -21,6 +26,7 @@ public class BoardUpdateService {
 
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
+    private final BoardImageRepository boardImageRepository;
     private final JwtService jwtService;
 
     public Board updateBoard(String token, BoardUpdateDto boardUpdateDto) {
@@ -30,6 +36,23 @@ public class BoardUpdateService {
         Board board = boardRepository.findById(boardUpdateDto.getBoard_id()).orElseThrow(BoardNotFoundException::new);
 
         checkMember(member, board.getMember());
+
+        board.getImagePaths().forEach(image -> image.delete());
+
+        List<BoardImage> boardImageList = new ArrayList<>();
+        boardUpdateDto.getImagePaths().forEach(imagePath ->
+                boardImageList.add(
+                        BoardImage.builder()
+                                .imagePath(imagePath)
+                                .board(board)
+                                .build()
+                ));
+
+        boardImageRepository.saveAll(boardImageList);
+
+        boardImageList.forEach(image -> {
+            board.addImage(image);
+        });
 
         board.updateBoard(boardUpdateDto);
 
