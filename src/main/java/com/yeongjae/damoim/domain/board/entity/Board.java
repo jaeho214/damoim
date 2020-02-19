@@ -1,5 +1,7 @@
 package com.yeongjae.damoim.domain.board.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.yeongjae.damoim.domain.board.dto.BoardUpdateDto;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.reply.entity.Reply;
 import com.yeongjae.damoim.global.jpa.JpaBasePersistable;
@@ -36,10 +38,9 @@ public class Board extends JpaBasePersistable {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
-    private List<BoardImage> imagePaths = new ArrayList<>();
+    private List<String> imagePaths = new ArrayList<>();
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Reply> replyList = new ArrayList<>();
 
     @Builder
@@ -48,7 +49,7 @@ public class Board extends JpaBasePersistable {
                  final Long hits,
                  final String location,
                  final Member member,
-                 final List<BoardImage> imagePaths,
+                 final List<String> imagePaths,
                  final List<Reply> replyList) {
         this.title = title;
         this.content = content;
@@ -59,20 +60,20 @@ public class Board extends JpaBasePersistable {
         this.replyList = replyList;
     }
 
-    public void updateBoard(String title, String content){
-        this.title = title;
-        this.content = content;
-    }
-
-    public void updateHits(){
-        this.hits++;
-    }
-
-    public void addImage(BoardImage image){
-        this.imagePaths.add(image);
+    public void addImage(String imagePath){
+        this.imagePaths.add(imagePath);
     }
 
     public void addReply(Reply reply){
         this.replyList.add(reply);
+        reply.setBoard(this);
     }
+
+    public void updateBoard(BoardUpdateDto boardUpdateDto){
+        this.title = boardUpdateDto.getTitle();
+        this.content = boardUpdateDto.getContent();
+        if(boardUpdateDto.getImagePaths() != null)
+            this.imagePaths = boardUpdateDto.getImagePaths();
+    }
+
 }
