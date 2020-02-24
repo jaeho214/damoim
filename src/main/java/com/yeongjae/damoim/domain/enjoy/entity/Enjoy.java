@@ -1,11 +1,10 @@
 package com.yeongjae.damoim.domain.enjoy.entity;
 
+import com.yeongjae.damoim.domain.enjoy.dto.EnjoyUpdateDto;
+import com.yeongjae.damoim.domain.location.entity.Location;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.global.jpa.JpaBasePersistable;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
@@ -30,7 +29,8 @@ public class Enjoy extends JpaBasePersistable {
     private Long hits = 0L;
 
     @Column(name = "location", length = 50, nullable = false)
-    private String location;
+    @Enumerated(value = EnumType.STRING)
+    private Location location;
 
     @Column(name = "category", length = 30, nullable = false)
     @Enumerated(value = EnumType.STRING)
@@ -48,4 +48,29 @@ public class Enjoy extends JpaBasePersistable {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    @Builder
+    public Enjoy(String title, String content, Long hits, Location location, EnjoyCategory category, String latitude, String longitude, Integer recruit, Member member) {
+        this.title = title;
+        this.content = content;
+        this.hits = hits;
+        this.location = location;
+        this.category = category;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.recruit = recruit;
+        this.member = member;
+    }
+
+    public void updateEnjoy(EnjoyUpdateDto enjoyUpdateDto) {
+        this.title = enjoyUpdateDto.getTitle();
+        this.content = enjoyUpdateDto.getContent();
+        this.category = enjoyUpdateDto.getCategory();
+        this.latitude = enjoyUpdateDto.getLatitude();
+        this.longitude = enjoyUpdateDto.getLongitude();
+        this.recruit = enjoyUpdateDto.getRecruit();
+    }
+
+    public void updateHits(){
+        this.hits++;
+    }
 }
