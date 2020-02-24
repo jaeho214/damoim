@@ -18,7 +18,11 @@ public enum ErrorCodeType {
     BOARD_NOT_FOUND(400, "BOARD_001", "해당 게시물을 찾을 수 없습니다."),
 
     //reply
-    REPLY_NOT_FOUND(400,"REPLY_001", "해당 댓글을 찾을 수 없습니다.");
+    REPLY_NOT_FOUND(400,"REPLY_001", "해당 댓글을 찾을 수 없습니다."),
+
+    //enjoy
+    ENJOY_NOT_FOUND(400, "ENJOY_001", "해당 번개 모임을 찾을 수 없습니다.");
+
 
     private int status;
     private String code;
