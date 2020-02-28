@@ -49,4 +49,16 @@ public class MemberController {
     public ResponseEntity deleteMember(@RequestHeader("token") String token){
         return memberDeleteService.deleteMember(token);
     }
+
+    //TODO: 아이디찾기 필요(어떤 거로 아이디 찾을지 고민해보기)
+
+    @GetMapping("/{email}")
+    public boolean checkEmail(@PathVariable String email){
+        return memberGetService.checkEmail(email);
+    }
+
+    @PostMapping("/pw")
+    public ResponseEntity findPassword(@RequestBody String email){
+        return ResponseEntity.ok().body(memberUpdateService.findPassword(email));
+    }
 }

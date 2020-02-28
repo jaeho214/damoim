@@ -1,5 +1,6 @@
 package com.yeongjae.damoim.domain.member.dto;
 
+import com.yeongjae.damoim.domain.location.entity.Location;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import lombok.*;
 
@@ -10,8 +11,9 @@ public class MemberUpdateDto {
 
     private String nickName;
     private String password;
-    private String address;
+    private Location location;
     private String phone;
+    private String birth;
     private Boolean isVerified;
     private String imagePath;
 
@@ -19,19 +21,21 @@ public class MemberUpdateDto {
         return Member.builder()
                 .nickName(this.nickName)
                 .password(this.password)
-                .address(this.address)
+                .location(this.location)
                 .phone(this.phone)
+                .birth(this.birth)
                 .isVerified(this.isVerified)
                 .imagePath(this.imagePath)
                 .build();
     }
 
     @Builder
-    public MemberUpdateDto(String nickName, String password, String address, String phone, Boolean isVerified, String imagePath) {
+    public MemberUpdateDto(String nickName, String password, Location location, String phone, String birth, Boolean isVerified, String imagePath) {
         this.nickName = nickName;
         this.password = password;
-        this.address = address;
+        this.location = location;
         this.phone = phone;
+        this.birth = birth;
         this.isVerified = isVerified;
         this.imagePath = imagePath;
     }
