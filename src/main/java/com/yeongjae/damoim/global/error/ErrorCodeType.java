@@ -21,7 +21,13 @@ public enum ErrorCodeType {
     REPLY_NOT_FOUND(400,"REPLY_001", "해당 댓글을 찾을 수 없습니다."),
 
     //enjoy
-    ENJOY_NOT_FOUND(400, "ENJOY_001", "해당 번개 모임을 찾을 수 없습니다.");
+    ENJOY_NOT_FOUND(400, "ENJOY_001", "해당 번개 모임을 찾을 수 없습니다."),
+
+    //deal
+    DEAL_NOT_FOUND(400, "DEAL_001", "해당 거래 목록을 찾을 수 없습니다."),
+
+    //interest
+    INTEREST_NOT_FOUND(400, "INTEREST_001","해당 즐겨찾기 기록을 찾을 수 없습니다.");
 
 
     private int status;
