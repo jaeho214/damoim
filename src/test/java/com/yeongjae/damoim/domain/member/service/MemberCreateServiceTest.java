@@ -1,5 +1,6 @@
 package com.yeongjae.damoim.domain.member.service;
 
+import com.yeongjae.damoim.domain.location.entity.Location;
 import com.yeongjae.damoim.domain.member.dto.MemberCreateDto;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
@@ -24,7 +25,7 @@ class MemberCreateServiceTest {
     private MemberCreateDto memberCreateDto = MemberCreateDto.builder()
             .email("email@gmail.com")
             .password("1")
-            .address("서울특별시 성북구 정릉동")
+            .location(Location.강원도_강릉시)
             .isVerified(false)
             .nickName("닉넴")
             .sex("male")
@@ -43,6 +44,6 @@ class MemberCreateServiceTest {
         //then
         assertThat(savedMember.getEmail()).isEqualTo(member.getEmail());
         assertThat(savedMember.getNickName()).isEqualTo(member.getNickName());
-        assertThat(savedMember.getAddress()).isEqualTo(member.getAddress());
+        assertThat(savedMember.getLocation()).isEqualTo(member.getLocation());
     }
 }

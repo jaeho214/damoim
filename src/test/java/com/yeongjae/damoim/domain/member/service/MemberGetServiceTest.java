@@ -1,5 +1,6 @@
 package com.yeongjae.damoim.domain.member.service;
 
+import com.yeongjae.damoim.domain.location.entity.Location;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
 import com.yeongjae.damoim.global.jwt.JwtService;
@@ -28,7 +29,7 @@ class MemberGetServiceTest {
     private Member member = Member.builder()
             .email("email@gmail.com")
             .password("1")
-            .address("서울특별시 성북구 정릉동")
+            .location(Location.강원도_강릉시)
             .isVerified(false)
             .nickName("닉넴")
             .sex("male")
@@ -45,7 +46,7 @@ class MemberGetServiceTest {
         Member member = memberGetService.getMember(token);
 
         //then
-        assertThat(member.getAddress()).isEqualTo(this.member.getAddress());
+        assertThat(member.getLocation()).isEqualTo(this.member.getLocation());
         assertThat(member.getNickName()).isEqualTo(this.member.getNickName());
     }
 }

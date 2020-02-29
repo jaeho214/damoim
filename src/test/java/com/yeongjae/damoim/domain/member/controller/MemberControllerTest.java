@@ -2,6 +2,7 @@ package com.yeongjae.damoim.domain.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.yeongjae.damoim.domain.location.entity.Location;
 import com.yeongjae.damoim.domain.member.dto.MemberCreateDto;
 import com.yeongjae.damoim.domain.member.dto.MemberSignInDto;
 import com.yeongjae.damoim.domain.member.dto.MemberUpdateDto;
@@ -57,7 +58,7 @@ class MemberControllerTest {
     private MemberCreateDto memberCreateDto = MemberCreateDto.builder()
             .email("email@gmail.com")
             .password("1")
-            .address("서울특별시 성북구 정릉동")
+            .location(Location.강원도_강릉시)
             .isVerified(false)
             .nickName("닉넴")
             .sex("male")
@@ -126,7 +127,7 @@ class MemberControllerTest {
     @Test
     void updateMember() throws Exception{
         MemberUpdateDto memberUpdateDto = MemberUpdateDto.builder()
-                .address("경기도 부천시 원미구")
+                .location(Location.강원도_강릉시)
                 .isVerified(true)
                 .nickName("닉넴입다")
                 .password("11")

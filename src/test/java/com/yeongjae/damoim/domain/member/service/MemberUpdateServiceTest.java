@@ -1,5 +1,6 @@
 package com.yeongjae.damoim.domain.member.service;
 
+import com.yeongjae.damoim.domain.location.entity.Location;
 import com.yeongjae.damoim.domain.member.dto.MemberUpdateDto;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
@@ -30,7 +31,7 @@ class MemberUpdateServiceTest {
 
     private MemberUpdateDto member = MemberUpdateDto.builder()
             .password("1")
-            .address("서울특별시 성북구 정릉동")
+            .location(Location.강원도_강릉시)
             .isVerified(false)
             .nickName("닉넴")
             .phone("010-1111-2222")
@@ -51,6 +52,6 @@ class MemberUpdateServiceTest {
 
         //then
         assertThat(member.getNickName()).isEqualTo(this.member.getNickName());
-        assertThat(member.getAddress()).isEqualTo(this.member.getAddress());
+        assertThat(member.getLocation()).isEqualTo(this.member.getLocation());
     }
 }
