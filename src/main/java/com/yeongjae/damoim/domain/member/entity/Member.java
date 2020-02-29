@@ -41,6 +41,9 @@ public class Member extends JpaBasePersistable {
     @Column(name = "fcmToken", nullable = false)
     private String fcmToken;
 
+    @Column(name = "role", nullable = false)
+    private String role;
+
     @Builder
     public Member(final String email,
                   final String nickName,
@@ -50,7 +53,8 @@ public class Member extends JpaBasePersistable {
                   final String sex,
                   final String imagePath,
                   final String birth,
-                  final Boolean isVerified) {
+                  final Boolean isVerified,
+                  final String role) {
         this.email = email;
         this.nickName = nickName;
         this.password = password;
@@ -60,6 +64,7 @@ public class Member extends JpaBasePersistable {
         this.imagePath = imagePath;
         this.birth = birth;
         this.isVerified = isVerified;
+        this.role = role;
     }
 
     public void updateMember(MemberUpdateDto memberUpdateDto){

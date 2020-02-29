@@ -7,6 +7,7 @@ import com.yeongjae.damoim.domain.member.exception.WrongPasswordException;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
 import com.yeongjae.damoim.global.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ public class MemberSignInService {
 
     private final MemberRepository memberRepository;
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public String signIn(MemberSignInDto memberSignInDto) {
@@ -27,7 +29,7 @@ public class MemberSignInService {
     }
 
     private void checkPw(Member member, MemberSignInDto memberSignInDto) {
-        if(member.getPassword().equals(memberSignInDto.getPassword()))
+        if(passwordEncoder.matches(member.getPassword(), memberSignInDto.getPassword()))
             return;
         throw new WrongPasswordException();
     }

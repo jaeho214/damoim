@@ -40,6 +40,7 @@ public class MemberCreateDto {
                 .isVerified(this.isVerified)
                 .birth(this.birth)
                 .imagePath(this.imagePath)
+                .role("USER")
                 .build();
     }
     @Builder

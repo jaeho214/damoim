@@ -1,19 +1,37 @@
 package com.yeongjae.damoim.global.jwt;
 
 import com.yeongjae.damoim.global.error.exception.UserDefineException;
+import com.yeongjae.damoim.global.security.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
 
-    private final String SECRET_KEY = "DAMOIM";
+    @Value("${spring.jwt.secret")
+    private String SECRET_KEY;
+
     private final long EXPIRE_TIME = 100000 * 60 * 60;
+    private final UserDetailsServiceImpl userDetailsService;
+
+    @PostConstruct
+    protected void init(){
+        SECRET_KEY = Base64.getEncoder().encodeToString(SECRET_KEY.getBytes());
+    }
 
     public String createJwt(String email){
         Map<String, Object> claimMap = new HashMap<>();
@@ -51,6 +69,10 @@ public class JwtService {
         }
     }
 
+    public String resolveToken(HttpServletRequest request){
+        return request.getHeader("token");
+    }
+
     public String findEmailByJwt(String token){
         Claims claims = Jwts.parser()
                 .setSigningKey(generateKey())
@@ -58,6 +80,11 @@ public class JwtService {
                 .getBody();
 
         return (String) claims.get("EMAIL");
+    }
+
+    public Authentication getAuthentication(String token){
+        UserDetails userDetails = userDetailsService.loadUserByUsername(this.findEmailByJwt(token));
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
 }
