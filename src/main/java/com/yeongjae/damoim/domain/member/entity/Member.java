@@ -26,7 +26,7 @@ public class Member extends JpaBasePersistable {
     @Column(name = "location", length = 50, nullable = false)
     @Enumerated(value = EnumType.STRING)
     private Location location;
-    @Column(name = "phone", length = 20, nullable = false)
+    @Column(unique = true, name = "phone", length = 20, nullable = false)
     private String phone;
     @Column(name = "sex", length = 5, nullable = false)
     private String sex;

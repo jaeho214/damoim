@@ -70,6 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 .antMatchers(AUTH_ARR)
                 .antMatchers("/damoim/sign/pw")
+                .antMatchers("/damoim/sign/email")
                 .antMatchers("/damoim/sign/check/**");
     }
 

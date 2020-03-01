@@ -1,8 +1,6 @@
 package com.yeongjae.damoim.domain.member.controller;
 
-import com.yeongjae.damoim.domain.member.dto.MemberCreateDto;
-import com.yeongjae.damoim.domain.member.dto.MemberSignInDto;
-import com.yeongjae.damoim.domain.member.dto.MemberUpdateDto;
+import com.yeongjae.damoim.domain.member.dto.*;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.service.*;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +20,7 @@ public class MemberController {
     private final MemberGetService memberGetService;
     private final MemberUpdateService memberUpdateService;
     private final MemberDeleteService memberDeleteService;
+    private final MemberCommonService memberCommonService;
 
     @PostMapping
     public ResponseEntity createMember(@RequestBody MemberCreateDto memberCreateDto){
@@ -50,15 +49,18 @@ public class MemberController {
         return memberDeleteService.deleteMember(token);
     }
 
-    //TODO: 아이디찾기 필요(어떤 거로 아이디 찾을지 고민해보기)
+    @PostMapping("/email")
+    public ResponseEntity findEmail(@RequestBody EmailFoundDto emailFoundDto){
+        return ResponseEntity.ok().body(memberCommonService.findEmail(emailFoundDto));
+    }
 
-    @GetMapping("/{email}")
+    @GetMapping("/check/{email}")
     public boolean checkEmail(@PathVariable String email){
-        return memberGetService.checkEmail(email);
+        return memberCommonService.checkEmail(email);
     }
 
     @PostMapping("/pw")
-    public ResponseEntity findPassword(@RequestBody String email){
-        return ResponseEntity.ok().body(memberUpdateService.findPassword(email));
+    public ResponseEntity findPassword(@RequestBody PasswordFoundDto passwordFoundDto){
+        return ResponseEntity.ok().body(memberCommonService.findPassword(passwordFoundDto));
     }
 }
