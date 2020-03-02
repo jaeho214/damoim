@@ -1,8 +1,6 @@
 package com.yeongjae.damoim.domain.board.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yeongjae.damoim.domain.board.dto.BoardUpdateDto;
-import com.yeongjae.damoim.domain.deal.entity.DealImage;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.reply.entity.Reply;
 import com.yeongjae.damoim.global.jpa.JpaBasePersistable;

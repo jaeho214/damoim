@@ -42,9 +42,10 @@ public class BoardCreateService {
                         .build()
                 ));
 
-        boardImageRepository.saveAll(boardImageList);
+        boardImageList.stream()
+                .forEach(boardImage -> board.addImage(boardImage));
 
-        boardImageList.forEach(image -> board.addImage(image));
+        boardImageRepository.saveAll(boardImageList);
 
         return boardRepository.save(board);
     }

@@ -23,14 +23,16 @@ public class BoardController {
     private final BoardDeleteService boardDeleteService;
 
     @GetMapping("/list/{location}")
-    public ResponseEntity getBoards(@RequestParam("pageNo") int pageNo,
+    public ResponseEntity getBoards(@RequestHeader("token") String token,
+                                    @RequestParam("pageNo") int pageNo,
                                     @PathVariable String location){
-        return ResponseEntity.ok(boardGetService.getBoards(pageNo, location));
+        return ResponseEntity.ok(boardGetService.getBoards(token, pageNo, location));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getBoard(@PathVariable Long id){
-        return ResponseEntity.ok().body(boardGetService.getBoard(id));
+    public ResponseEntity getBoard(@RequestHeader("token") String token,
+                                   @PathVariable Long id){
+        return ResponseEntity.ok().body(boardGetService.getBoard(token, id));
     }
 
     @PostMapping

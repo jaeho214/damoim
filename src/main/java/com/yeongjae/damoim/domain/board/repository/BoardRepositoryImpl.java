@@ -4,6 +4,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.yeongjae.damoim.domain.board.entity.Board;
 import com.yeongjae.damoim.domain.board.entity.QBoard;
 import com.yeongjae.damoim.domain.board.entity.QBoardImage;
+import com.yeongjae.damoim.domain.member.entity.QMember;
 import com.yeongjae.damoim.domain.reply.entity.QReply;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
     private QBoard board = QBoard.board;
     private QBoardImage boardImage = QBoardImage.boardImage;
     private QReply reply = QReply.reply;
+    private QMember member = QMember.member;
 
     public BoardRepositoryImpl(){
         super(Board.class);
@@ -32,6 +34,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
         jpaQuery = jpaQuery.select(board)
                     .leftJoin(board.replyList, reply)
                     .leftJoin(board.imagePaths, boardImage)
+                    .leftJoin(board.member, member)
                     .fetchJoin()
                     .where(board.id.eq(board_id));
 

@@ -37,6 +37,8 @@ public class BoardUpdateService {
 
         checkMember(member, board.getMember());
 
+        board.updateBoard(boardUpdateDto);
+
         board.getImagePaths().forEach(image -> image.delete());
 
         List<BoardImage> boardImageList = new ArrayList<>();
@@ -54,7 +56,6 @@ public class BoardUpdateService {
             board.addImage(image);
         });
 
-        board.updateBoard(boardUpdateDto);
 
         return board;
     }

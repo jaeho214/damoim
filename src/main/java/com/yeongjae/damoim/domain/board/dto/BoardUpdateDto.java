@@ -1,6 +1,5 @@
 package com.yeongjae.damoim.domain.board.dto;
 
-import com.yeongjae.damoim.domain.board.entity.BoardImage;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

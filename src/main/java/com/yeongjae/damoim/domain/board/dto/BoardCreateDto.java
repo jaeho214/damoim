@@ -29,18 +29,12 @@ public class BoardCreateDto {
     }
 
     public Board of(Member member){
-        Board board = Board.builder()
+        return Board.builder()
                 .title(this.title)
                 .content(this.content)
                 .location(this.location)
                 .member(member)
                 .hits(0L)
                 .build();
-//
-//        if(imagePaths!=null) {
-//            this.imagePaths.stream()
-//                    .forEach((imagePath) -> board.addImage(imagePath));
-//        }
-        return board;
     }
 }
