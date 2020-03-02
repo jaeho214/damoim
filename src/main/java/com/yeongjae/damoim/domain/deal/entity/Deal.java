@@ -1,5 +1,8 @@
 package com.yeongjae.damoim.domain.deal.entity;
 
+import com.yeongjae.damoim.domain.board.entity.BoardImage;
+import com.yeongjae.damoim.domain.deal.dto.DealUpdateDto;
+import com.yeongjae.damoim.domain.location.entity.Location;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.global.jpa.JpaBasePersistable;
 import lombok.*;
@@ -7,6 +10,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -27,7 +32,8 @@ public class Deal extends JpaBasePersistable {
     private Long hits = 0L;
 
     @Column(name = "location", length = 50, nullable = false)
-    private String location;
+    @Enumerated(value = EnumType.STRING)
+    private Location location;
 
     @Column(name = "category", length = 30, nullable = false)
     @Enumerated(value = EnumType.STRING)
@@ -44,15 +50,20 @@ public class Deal extends JpaBasePersistable {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    @OneToMany(mappedBy = "deal", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Column(name = "image_paths")
+    private List<DealImage> imagePaths = new ArrayList<>();
+
     @Builder
     public Deal(final String title,
                 final String content,
                 final Long hits,
-                final String location,
+                final Location location,
                 final DealCategory category,
                 final String price,
                 final DealStatus status,
-                final Member member) {
+                final Member member,
+                final List<DealImage> imagePaths) {
         this.title = title;
         this.content = content;
         this.hits = hits;
@@ -61,20 +72,23 @@ public class Deal extends JpaBasePersistable {
         this.price = price;
         this.status = status;
         this.member = member;
+        this.imagePaths = imagePaths;
     }
 
-    public void updateStatus(DealStatus status){
-        this.status = status;
+    public void updateDeal(DealUpdateDto dealUpdateDto){
+        this.title = dealUpdateDto.getTitle();
+        this.content = dealUpdateDto.getContent();
+        this.category = dealUpdateDto.getCategory();
+        this.price = dealUpdateDto.getPrice();
+        this.status = dealUpdateDto.getStatus();
+        this.imagePaths.clear();
     }
 
-    public void updateDeal(String title, String content, DealCategory category, String price){
-        this.title = title;
-        this.content = content;
-        this.category = category;
-        this.price = price;
+    public void addImage(DealImage imagePath) {
+        this.imagePaths.add(imagePath);
     }
-
     public void updateHits(){
         this.hits++;
     }
+
 }
