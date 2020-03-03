@@ -1,14 +1,12 @@
-package com.yeongjae.damoim.global.security.config;
+package com.yeongjae.damoim.global.security;
 
 import com.yeongjae.damoim.global.filter.AccessDeniedHandlerCustom;
 import com.yeongjae.damoim.global.filter.AuthenticationEntryPointCustom;
 import com.yeongjae.damoim.global.filter.JwtAuthenticationFilter;
-import com.yeongjae.damoim.global.security.service.UserDetailsServiceImpl;
+import com.yeongjae.damoim.global.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -20,9 +18,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import java.util.Arrays;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Configuration
@@ -39,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/configuration/ui",
             "/swagger-resources/**",
             "/configuration/security",
-            "/swagger-ui.html/**",
+            "/swagger-ui.html",
             "/webjars/**",
             "favicon.ico"
     };
@@ -63,9 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .authorizeRequests()
-                        .antMatchers("/oauth_signIn").permitAll()
-                        .antMatchers(HttpMethod.POST, "/damoim/sign/signIn").permitAll()
-                        .antMatchers(HttpMethod.POST, "/damoim/sign").permitAll()
+                        .antMatchers(HttpMethod.POST).permitAll()
                         .anyRequest().hasRole("USER")
                 .and()
                     .exceptionHandling().accessDeniedHandler(accessDeniedHandlerCustom)

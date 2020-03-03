@@ -21,7 +21,7 @@ public class Member extends JpaBasePersistable {
     private String email;
     @Column(name = "nick_name", length = 30, nullable = false)
     private String nickName;
-    @Column(name = "password" , length = 30, nullable = false)
+    @Column(name = "password" , length = 30)
     private String password;
     @Column(name = "location", length = 50, nullable = false)
     @Enumerated(value = EnumType.STRING)
@@ -44,6 +44,9 @@ public class Member extends JpaBasePersistable {
     @Column(name = "role", nullable = false)
     private String role;
 
+    @Column(name = "provider", length = 100)
+    private String provider;
+
     @Builder
     public Member(final String email,
                   final String nickName,
@@ -54,7 +57,8 @@ public class Member extends JpaBasePersistable {
                   final String imagePath,
                   final String birth,
                   final Boolean isVerified,
-                  final String role) {
+                  final String role,
+                  final String provider) {
         this.email = email;
         this.nickName = nickName;
         this.password = password;
@@ -65,6 +69,7 @@ public class Member extends JpaBasePersistable {
         this.birth = birth;
         this.isVerified = isVerified;
         this.role = role;
+        this.provider = provider;
     }
 
     public void updateMember(MemberUpdateDto memberUpdateDto){

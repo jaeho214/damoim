@@ -28,6 +28,18 @@ public class MemberController {
         return ResponseEntity.created(URI.create("/damoim/sign/" + savedMember.getId())).body(savedMember);
     }
 
+    @PostMapping("/kakao/{access_token}")
+    public ResponseEntity createMemberByKAKAO(@PathVariable String access_token, MemberSocialCreateDto memberSocialCreateDto){
+        Member savedMember = memberCreateService.createMemberByKAKAO(access_token, memberSocialCreateDto);
+        return ResponseEntity.created(URI.create("/damoim/sign/" + savedMember.getId())).body(savedMember);
+    }
+
+    @PostMapping("/naver/{access_token}")
+    public ResponseEntity createMemberByNAVER(@PathVariable String access_token, MemberSocialCreateDto memberSocialCreateDto){
+        Member savedMember = memberCreateService.createMemberByNAVER(access_token, memberSocialCreateDto);
+        return ResponseEntity.created(URI.create("/damoim/sign/" + savedMember.getId())).body(savedMember);
+    }
+
     @PostMapping("/signIn")
     public String signIn(@RequestBody MemberSignInDto memberSignInDto){
         return memberSignInService.signIn(memberSignInDto);
