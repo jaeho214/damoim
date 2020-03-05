@@ -4,8 +4,7 @@ jdk: openjdk8
 before_install:
   - chmod +x mvnw
 
-install:
-  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+install: true
 
 script: ./mvnw clean package
 
