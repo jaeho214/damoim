@@ -4,15 +4,11 @@ jdk: openjdk8
 before_install:
   - chmod +x mvnw
 
-env:
-  - MAVEN_VERSION=3.2.5
-  - MAVEN_VERSION=3.3.9
+script:
+  - ./mvnw clean package
+  - ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 
-install:
-  - "mvn -N io.takari:maven:wrapper -Dmaven=${MAVEN_VERSION}"
-  - "./mvnw --show-version --errors --batch-mode test-compile dependency:go-offline"
+cache:
+  directories:
+    - $HOME/.m2
 
-directories:
-  - $HOME/.m2
-
-script: ./mvnw clean package
