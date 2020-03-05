@@ -1,7 +1,7 @@
 package com.yeongjae.damoim.global.jwt;
 
 import com.yeongjae.damoim.global.error.exception.UserDefineException;
-import com.yeongjae.damoim.global.security.service.UserDetailsServiceImpl;
+import com.yeongjae.damoim.global.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

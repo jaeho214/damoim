@@ -1,4 +1,4 @@
-package com.yeongjae.damoim.global.security.service;
+package com.yeongjae.damoim.global.security;
 
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
