@@ -6,6 +6,7 @@ import com.yeongjae.damoim.domain.board.dto.BoardCreateDto;
 import com.yeongjae.damoim.domain.board.dto.BoardUpdateDto;
 import com.yeongjae.damoim.domain.board.entity.Board;
 import com.yeongjae.damoim.domain.board.service.BoardCreateService;
+import com.yeongjae.damoim.domain.board.service.BoardDeleteService;
 import com.yeongjae.damoim.domain.board.service.BoardGetService;
 import com.yeongjae.damoim.domain.board.service.BoardUpdateService;
 import com.yeongjae.damoim.domain.member.entity.Member;
@@ -19,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -28,8 +30,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMapOf;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -48,6 +49,8 @@ class BoardControllerTest {
     private BoardGetService boardGetService;
     @Mock
     private BoardUpdateService boardUpdateService;
+    @Mock
+    private BoardDeleteService boardDeleteService;
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper()
@@ -63,36 +66,38 @@ class BoardControllerTest {
                 .alwaysDo(print()).build();
     }
 
-//    @Test
-//    void getBoards() throws Exception {
-//        Board board = boardCreateDto.of(memberFixture);
-//        String location = "location";
-//        given(boardGetService.getBoards(any(String.class), any(Integer.class), any(String.class))).willReturn(Arrays.asList(board));
-//
-//        mockMvc.perform(
-//                get("/damoim/board/list/{location}",location)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .param("pageNo", String.valueOf(1))
-//        )
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$[0].title").value(board.getTitle()));
-//    }
-//
-//    @Test
-//    void getBoard() throws Exception {
-//        Long board_id = 1L;
-//        Reply reply = new EasyRandom().nextObject(Reply.class);
-//        reply.setBoard(boardFixture);
-//        boardFixture.setReplyList(Arrays.asList(reply));
-//        given(boardGetService.getBoard(any(String.class), any(Long.class))).willReturn(boardFixture);
-//
-//        mockMvc.perform(
-//                get("/damoim/board/{id}", board_id)
-//                .contentType(MediaType.APPLICATION_JSON)
-//        )
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.title").value(boardFixture.getTitle()));
-//    }
+    @Test
+    void getBoards() throws Exception {
+        Board board = boardCreateDto.of(memberFixture);
+        String location = "location";
+        given(boardGetService.getBoards(any(String.class), any(Integer.class), any(String.class))).willReturn(Arrays.asList(board));
+
+        mockMvc.perform(
+                get("/damoim/board/list/{location}",location)
+                .header("token", "token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("pageNo", String.valueOf(1))
+        )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value(board.getTitle()));
+    }
+
+    @Test
+    void getBoard() throws Exception {
+        Long board_id = 1L;
+        Reply reply = new EasyRandom().nextObject(Reply.class);
+        reply.setBoard(boardFixture);
+        boardFixture.setReplyList(Arrays.asList(reply));
+        given(boardGetService.getBoard(any(String.class), any(Long.class))).willReturn(boardFixture);
+
+        mockMvc.perform(
+                get("/damoim/board/{id}", board_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("token", "token")
+        )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value(boardFixture.getTitle()));
+    }
 
     @Test
     void createBoard() throws Exception{
@@ -125,7 +130,16 @@ class BoardControllerTest {
                 .andExpect(status().isOk());
     }
 
-//    @Test
-//    void deleteBoard() {
-//    }
+    @Test
+    void deleteBoard() throws Exception {
+        Long board_id = 1L;
+        given(boardDeleteService.deleteBoard(anyString(), anyLong())).willReturn(ResponseEntity.noContent().build());
+
+        mockMvc.perform(
+                delete("/damoim/board/{id}", board_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("token", "token")
+        )
+                .andExpect(status().isNoContent());
+    }
 }
