@@ -4,8 +4,6 @@ target/
 !**/src/main/**
 !**/src/test/**
 
-aws.yml
-secret.yml
 
 ### STS ###
 .apt_generated
@@ -32,3 +30,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+/src/main/resources/aws.yml
+/src/main/resources/secret.yml
