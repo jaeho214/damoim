@@ -33,28 +33,34 @@ public class BoardUpdateService {
         String email = jwtService.findEmailByJwt(token);
 
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
-        Board board = boardRepository.findById(boardUpdateDto.getBoard_id()).orElseThrow(BoardNotFoundException::new);
+        Board board = boardRepository.fetchBoardById(boardUpdateDto.getBoard_id()).orElseThrow(BoardNotFoundException::new);
 
         checkMember(member, board.getMember());
 
         board.updateBoard(boardUpdateDto);
 
-        board.getImagePaths().forEach(image -> image.delete());
+        if(boardUpdateDto.getImagePaths() != null) {
 
-        List<BoardImage> boardImageList = new ArrayList<>();
-        boardUpdateDto.getImagePaths().forEach(imagePath ->
-                boardImageList.add(
-                        BoardImage.builder()
-                                .imagePath(imagePath)
-                                .board(board)
-                                .build()
-                ));
+            if (board.getImagePaths() != null) {
+                board.getImagePaths().forEach(image -> image.delete());
+                board.getImagePaths().clear();
+            }
+            List<BoardImage> boardImageList = new ArrayList<>();
+            boardUpdateDto.getImagePaths().forEach(imagePath ->
+                    boardImageList.add(
+                            BoardImage.builder()
+                                    .imagePath(imagePath)
+                                    .board(board)
+                                    .build()
+                    ));
 
-        boardImageRepository.saveAll(boardImageList);
+            boardImageRepository.saveAll(boardImageList);
 
-        boardImageList.forEach(image -> {
-            board.addImage(image);
-        });
+            boardImageList.forEach(image -> {
+                board.addImage(image);
+            });
+
+        }
 
 
         return board;

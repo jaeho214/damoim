@@ -33,19 +33,21 @@ public class BoardCreateService {
 
         Board board = boardCreateDto.of(member);
 
-        List<BoardImage> boardImageList = new ArrayList<>();
-        boardCreateDto.getImagePaths().forEach(imagePath ->
-                boardImageList.add(
-                        BoardImage.builder()
-                        .imagePath(imagePath)
-                        .board(board)
-                        .build()
-                ));
+        if(boardCreateDto.getImagePaths() != null) {
+            List<BoardImage> boardImageList = new ArrayList<>();
+            boardCreateDto.getImagePaths().forEach(imagePath ->
+                    boardImageList.add(
+                            BoardImage.builder()
+                                    .imagePath(imagePath)
+                                    .board(board)
+                                    .build()
+                    ));
 
-        boardImageList.stream()
-                .forEach(boardImage -> board.addImage(boardImage));
+            boardImageList.stream()
+                    .forEach(boardImage -> board.addImage(boardImage));
 
-        boardImageRepository.saveAll(boardImageList);
+            boardImageRepository.saveAll(boardImageList);
+        }
 
         return boardRepository.save(board);
     }

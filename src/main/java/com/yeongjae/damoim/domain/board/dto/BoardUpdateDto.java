@@ -1,9 +1,6 @@
 package com.yeongjae.damoim.domain.board.dto;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -20,7 +17,7 @@ public class BoardUpdateDto {
     private String content;
     private List<String> imagePaths;
 
-
+    @Builder
     public BoardUpdateDto(String title,
                           String content,
                           List<String> imagePaths) {

@@ -34,11 +34,15 @@ public class BoardGetService {
         String email = jwtService.findEmailByJwt(token);
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
-        if(!member.getIsVerified() || !member.getLocation().equals(location))
+        if(!member.getIsVerified() || member.getLocation().equals(location))
             throw new BusinessLogicException(ErrorCodeType.USER_UNAUTHORIZED);
 
-        Pageable pageable = PageRequest.of(pageNo, 15, Sort.Direction.ASC);
+        Pageable pageable = PageRequest.of(pageNo, 15, Sort.Direction.DESC, "createdAt");
         Page<Board> boards = boardRepository.findByLocation(location, pageable);
+
+        if(boards == null)
+            throw new BoardNotFoundException();
+
         return boards.stream()
                 .collect(Collectors.toList());
     }
@@ -50,7 +54,7 @@ public class BoardGetService {
 
         Board board = boardRepository.fetchBoardById(id).orElseThrow(BoardNotFoundException::new);
 
-        if(!member.getIsVerified() || member.getLocation().equals(board.getLocation()))
+        if(!member.getIsVerified() || !member.getLocation().equals(board.getLocation()))
             throw new BusinessLogicException(ErrorCodeType.USER_UNAUTHORIZED);
 
         board.updateHits();

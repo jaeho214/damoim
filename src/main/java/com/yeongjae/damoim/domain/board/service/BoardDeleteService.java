@@ -10,6 +10,7 @@ import com.yeongjae.damoim.global.error.ErrorCodeType;
 import com.yeongjae.damoim.global.error.exception.BusinessLogicException;
 import com.yeongjae.damoim.global.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

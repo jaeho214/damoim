@@ -34,6 +34,7 @@ public class BoardCreateDto {
                 .content(this.content)
                 .location(this.location)
                 .member(member)
+                .imagePaths(new ArrayList<>())
                 .hits(0L)
                 .build();
     }
