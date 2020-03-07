@@ -34,7 +34,7 @@ public class BoardGetService {
         String email = jwtService.findEmailByJwt(token);
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
-        if(!member.getIsVerified() || member.getLocation().equals(location))
+        if(!member.getIsVerified() || !member.getLocation().equals(location))
             throw new BusinessLogicException(ErrorCodeType.USER_UNAUTHORIZED);
 
         Pageable pageable = PageRequest.of(pageNo, 15, Sort.Direction.DESC, "createdAt");
