@@ -72,7 +72,6 @@ class DealUpdateServiceTest {
 
         //then
         assertThat(updateDeal.getContent()).isEqualTo(dealUpdateDtoFixture.getContent());
-        assertThat(updateDeal.getStatus()).isEqualTo(dealUpdateDtoFixture.getStatus());
 
     }
 }
