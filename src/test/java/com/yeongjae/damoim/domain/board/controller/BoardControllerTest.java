@@ -80,9 +80,9 @@ class BoardControllerTest {
     @Test
     void getBoard() throws Exception {
         Long board_id = 1L;
-        Reply reply = new EasyRandom().nextObject(Reply.class);
-        reply.setBoard(boardFixture);
-        boardFixture.setReplyList(Arrays.asList(reply));
+//        Reply reply = new EasyRandom().nextObject(Reply.class);
+//        reply.setBoard(boardFixture);
+//        boardFixture.setReplyList(Arrays.asList(reply));
         given(boardGetService.getBoard(any(String.class), any(Long.class))).willReturn(boardFixture);
 
         mockMvc.perform(
