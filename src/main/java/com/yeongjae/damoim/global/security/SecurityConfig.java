@@ -35,7 +35,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-resources/**",
             "/configuration/security",
             "/swagger-ui.html",
-            "swagger-ui.html",
             "/webjars/**",
             "favicon.ico"
     };
@@ -61,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizeRequests()
                         .antMatchers(HttpMethod.POST).permitAll()
                         .antMatchers("/damoim/chat/**").hasRole("USER")
-                        .anyRequest().hasRole("USER")
+                        .anyRequest().permitAll()//.hasRole("USER")
                 .and()
                     .exceptionHandling().accessDeniedHandler(accessDeniedHandlerCustom)
                 .and()
