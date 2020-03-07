@@ -1,6 +1,5 @@
 package com.yeongjae.damoim.domain.deal.service;
 
-import com.yeongjae.damoim.domain.board.entity.BoardImage;
 import com.yeongjae.damoim.domain.deal.dto.DealCreateDto;
 import com.yeongjae.damoim.domain.deal.entity.Deal;
 import com.yeongjae.damoim.domain.deal.entity.DealImage;
@@ -34,18 +33,20 @@ public class DealCreateService {
 
         Deal deal = dealCreateDto.of(member);
 
-        List<DealImage> dealImageList = new ArrayList<>();
-        dealCreateDto.getImagePaths().forEach(imagePath ->
-                dealImageList.add(
-                        DealImage.builder()
-                                .imagePath(imagePath)
-                                .deal(deal)
-                                .build()
-                ));
+        if(dealCreateDto.getImagePaths() != null) {
+            List<DealImage> dealImageList = new ArrayList<>();
+            dealCreateDto.getImagePaths().forEach(imagePath ->
+                    dealImageList.add(
+                            DealImage.builder()
+                                    .imagePath(imagePath)
+                                    .deal(deal)
+                                    .build()
+                    ));
 
-        dealImageList.forEach(dealImage -> deal.addImage(dealImage));
+            dealImageList.forEach(dealImage -> deal.addImage(dealImage));
 
-        dealImageRepository.saveAll(dealImageList);
+            dealImageRepository.saveAll(dealImageList);
+        }
 
         return dealRepository.save(deal);
     }

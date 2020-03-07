@@ -3,7 +3,6 @@ package com.yeongjae.damoim.domain.deal.service;
 import com.yeongjae.damoim.domain.deal.entity.Deal;
 import com.yeongjae.damoim.domain.deal.exception.DealNotFoundException;
 import com.yeongjae.damoim.domain.deal.repository.DealRepository;
-import com.yeongjae.damoim.domain.location.entity.Location;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
@@ -30,7 +29,7 @@ public class DealGetService {
     private final JwtService jwtService;
 
     @Transactional(readOnly = true)
-    public List<Deal> getDeals(Location location, int pageNo) {
+    public List<Deal> getDeals(String location, int pageNo) {
         Pageable pageable = PageRequest.of(pageNo, 10, Sort.Direction.ASC, "createdAt");
 
         Page<Deal> dealPage = dealRepository.findByLocation(location, pageable);
@@ -49,7 +48,7 @@ public class DealGetService {
 
         Deal deal = dealRepository.fetchById(deal_id).orElseThrow(DealNotFoundException::new);
 
-        if(!member.getIsVerified() || member.getLocation().equals(deal.getLocation()))
+        if(!member.getIsVerified() || !member.getLocation().equals(deal.getLocation()))
             throw new BusinessLogicException(ErrorCodeType.USER_UNAUTHORIZED);
 
         deal.updateHits();

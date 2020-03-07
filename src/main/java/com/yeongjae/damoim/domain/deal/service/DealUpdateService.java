@@ -40,20 +40,24 @@ public class DealUpdateService {
 
         deal.updateDeal(dealUpdateDto);
 
-        deal.getImagePaths().forEach(dealImage -> dealImage.delete());
+        if(dealUpdateDto.getImagePaths() != null) {
+            if (deal.getImagePaths() != null) {
+                deal.getImagePaths().forEach(dealImage -> dealImage.delete());
+                deal.getImagePaths().clear();
+            }
 
-        List<DealImage> dealImageList = new ArrayList<>();
-        dealUpdateDto.getImagePaths().forEach(imagePath ->
-                dealImageList.add(
-                        DealImage.builder()
-                                .imagePath(imagePath)
-                                .deal(deal)
-                                .build()
-                ));
+            List<DealImage> dealImageList = new ArrayList<>();
+            dealUpdateDto.getImagePaths().forEach(imagePath ->
+                    dealImageList.add(
+                            DealImage.builder()
+                                    .imagePath(imagePath)
+                                    .deal(deal)
+                                    .build()
+                    ));
 
-        dealImageRepository.saveAll(dealImageList);
-        dealImageList.forEach(dealImage -> deal.addImage(dealImage));
-
+            dealImageRepository.saveAll(dealImageList);
+            dealImageList.forEach(dealImage -> deal.addImage(dealImage));
+        }
         return deal;
     }
 

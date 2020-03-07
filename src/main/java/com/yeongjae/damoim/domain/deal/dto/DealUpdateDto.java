@@ -16,7 +16,7 @@ public class DealUpdateDto {
     private Long deal_id;
     private String title;
     private String content;
-    private DealCategory category = DealCategory.ETC;
+    private String category;
     private String price;
     private DealStatus status;
     private List<String> imagePaths;

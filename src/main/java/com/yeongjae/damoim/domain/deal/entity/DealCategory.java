@@ -11,4 +11,12 @@ public enum DealCategory {
     DealCategory(String category){
         this.category = category;
     }
+
+    public static DealCategory fromString(String requestString){
+        for(DealCategory category : DealCategory.values()){
+            if(category.getCategory().equals(requestString))
+                return category;
+        }
+        return null;
+    }
 }

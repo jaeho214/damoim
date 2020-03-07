@@ -1,8 +1,6 @@
 package com.yeongjae.damoim.domain.deal.entity;
 
-import com.yeongjae.damoim.domain.board.entity.BoardImage;
 import com.yeongjae.damoim.domain.deal.dto.DealUpdateDto;
-import com.yeongjae.damoim.domain.location.entity.Location;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.global.jpa.JpaBasePersistable;
 import lombok.*;
@@ -32,8 +30,7 @@ public class Deal extends JpaBasePersistable {
     private Long hits = 0L;
 
     @Column(name = "location", length = 50, nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private Location location;
+    private String location;
 
     @Column(name = "category", length = 30, nullable = false)
     @Enumerated(value = EnumType.STRING)
@@ -58,7 +55,7 @@ public class Deal extends JpaBasePersistable {
     public Deal(final String title,
                 final String content,
                 final Long hits,
-                final Location location,
+                final String location,
                 final DealCategory category,
                 final String price,
                 final DealStatus status,
@@ -78,10 +75,9 @@ public class Deal extends JpaBasePersistable {
     public void updateDeal(DealUpdateDto dealUpdateDto){
         this.title = dealUpdateDto.getTitle();
         this.content = dealUpdateDto.getContent();
-        this.category = dealUpdateDto.getCategory();
+        this.category = DealCategory.fromString(dealUpdateDto.getCategory());
         this.price = dealUpdateDto.getPrice();
         this.status = dealUpdateDto.getStatus();
-        this.imagePaths.clear();
     }
 
     public void addImage(DealImage imagePath) {
