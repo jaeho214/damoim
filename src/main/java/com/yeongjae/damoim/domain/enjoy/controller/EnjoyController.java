@@ -36,8 +36,9 @@ public class EnjoyController {
     }
 
     @GetMapping("/{enjoy_id}")
-    public ResponseEntity getEnjoy(@PathVariable Long enjoy_id){
-        return ResponseEntity.ok().body(enjoyGetService.getEnjoy(enjoy_id));
+    public ResponseEntity getEnjoy(@RequestHeader("token") String token,
+                                   @PathVariable Long enjoy_id){
+        return ResponseEntity.ok().body(enjoyGetService.getEnjoy(token, enjoy_id));
     }
 
     @PutMapping

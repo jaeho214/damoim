@@ -11,4 +11,12 @@ public enum EnjoyCategory {
     EnjoyCategory(String category){
         this.category = category;
     }
+
+    public static EnjoyCategory fromString(String requestString){
+        for(EnjoyCategory category : EnjoyCategory.values()){
+            if(category.getCategory().equals(requestString))
+                return category;
+        }
+        return null;
+    }
 }

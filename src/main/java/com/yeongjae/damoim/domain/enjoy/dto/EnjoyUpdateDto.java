@@ -19,7 +19,7 @@ public class EnjoyUpdateDto {
     @NotBlank(message = "내용을 입력하시오")
     private String content;
     @NotBlank(message = "카테고리를 정하시오")
-    private EnjoyCategory category;
+    private String category;
     @NotBlank(message = "번개 장소의 위치를 지정하시오")
     private String latitude;
     @NotBlank(message = "번개 장소의 위치를 지정하시오")
@@ -31,7 +31,7 @@ public class EnjoyUpdateDto {
     public EnjoyUpdateDto(Long enjoy_id,
                           String title,
                           String content,
-                          EnjoyCategory category,
+                          String category,
                           String latitude,
                           String longitude,
                           Integer recruit) {

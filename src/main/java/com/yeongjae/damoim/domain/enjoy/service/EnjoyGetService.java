@@ -3,6 +3,12 @@ package com.yeongjae.damoim.domain.enjoy.service;
 import com.yeongjae.damoim.domain.enjoy.entity.Enjoy;
 import com.yeongjae.damoim.domain.enjoy.exception.EnjoyNotFoundException;
 import com.yeongjae.damoim.domain.enjoy.repository.EnjoyRepository;
+import com.yeongjae.damoim.domain.member.entity.Member;
+import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
+import com.yeongjae.damoim.domain.member.repository.MemberRepository;
+import com.yeongjae.damoim.global.error.ErrorCodeType;
+import com.yeongjae.damoim.global.error.exception.BusinessLogicException;
+import com.yeongjae.damoim.global.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,19 +24,28 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EnjoyGetService {
     private final EnjoyRepository enjoyRepository;
+    private final MemberRepository memberRepository;
+    private final JwtService jwtService;
 
     @Transactional(readOnly = true)
     public List<Enjoy> getEnjoys(String location, int pageNo){
-        Pageable pageable = PageRequest.of(pageNo, 10, Sort.Direction.ASC);
-        Page<Enjoy> locationPages = enjoyRepository.findByLocation(location, pageable);
+        Pageable pageable = PageRequest.of(pageNo, 10, Sort.Direction.DESC, "createdAt");
+        Page<Enjoy> enjoyPages = enjoyRepository.findByLocation(location, pageable);
 
-        return locationPages.stream()
+        return enjoyPages.stream()
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public Enjoy getEnjoy(Long enjoy_id){
+    public Enjoy getEnjoy(String token, Long enjoy_id){
+        String email = jwtService.findEmailByJwt(token);
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+
         Enjoy enjoy = enjoyRepository.fetchEnjoyById(enjoy_id).orElseThrow(EnjoyNotFoundException::new);
+
+        if(!member.getIsVerified() || !member.getLocation().equals(enjoy.getLocation()))
+            throw new BusinessLogicException(ErrorCodeType.USER_UNAUTHORIZED);
+
         enjoy.updateHits();
         return enjoy;
     }

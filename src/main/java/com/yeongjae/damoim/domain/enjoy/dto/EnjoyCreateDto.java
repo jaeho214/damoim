@@ -2,7 +2,6 @@ package com.yeongjae.damoim.domain.enjoy.dto;
 
 import com.yeongjae.damoim.domain.enjoy.entity.Enjoy;
 import com.yeongjae.damoim.domain.enjoy.entity.EnjoyCategory;
-import com.yeongjae.damoim.domain.location.entity.Location;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import lombok.*;
 
@@ -17,9 +16,9 @@ public class EnjoyCreateDto {
     @NotBlank(message = "내용을 입력하시오")
     private String content;
     @NotBlank(message = "지역을 입력하시오")
-    private Location location;
+    private String location;
     @NotBlank(message = "카테고리를 정하시오")
-    private EnjoyCategory category;
+    private String category;
     @NotBlank(message = "번개 장소의 위치를 지정하시오")
     private String latitude;
     @NotBlank(message = "번개 장소의 위치를 지정하시오")
@@ -28,7 +27,7 @@ public class EnjoyCreateDto {
     private Integer recruit;
 
     @Builder
-    public EnjoyCreateDto(String title, String content, Location location, EnjoyCategory category, String latitude, String longitude, Integer recruit) {
+    public EnjoyCreateDto(String title, String content, String location, String category, String latitude, String longitude, Integer recruit) {
         this.title = title;
         this.content = content;
         this.location = location;
@@ -43,7 +42,7 @@ public class EnjoyCreateDto {
                 .title(this.title)
                 .content(this.content)
                 .location(this.location)
-                .category(this.category)
+                .category(EnjoyCategory.fromString(this.category))
                 .latitude(this.latitude)
                 .longitude(this.longitude)
                 .recruit(this.recruit)
