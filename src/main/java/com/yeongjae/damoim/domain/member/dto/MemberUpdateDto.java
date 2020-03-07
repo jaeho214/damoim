@@ -1,6 +1,5 @@
 package com.yeongjae.damoim.domain.member.dto;
 
-import com.yeongjae.damoim.domain.location.entity.Location;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import lombok.*;
 
@@ -11,7 +10,7 @@ public class MemberUpdateDto {
 
     private String nickName;
     private String password;
-    private Location location;
+    private String location;
     private String phone;
     private String birth;
     private Boolean isVerified;
@@ -30,7 +29,7 @@ public class MemberUpdateDto {
     }
 
     @Builder
-    public MemberUpdateDto(String nickName, String password, Location location, String phone, String birth, Boolean isVerified, String imagePath) {
+    public MemberUpdateDto(String nickName, String password, String location, String phone, String birth, Boolean isVerified, String imagePath) {
         this.nickName = nickName;
         this.password = password;
         this.location = location;

@@ -1,6 +1,5 @@
 package com.yeongjae.damoim.domain.member.dto;
 
-import com.yeongjae.damoim.domain.location.entity.Location;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.global.oauth.domain.KAKAOProfile;
 import com.yeongjae.damoim.global.oauth.domain.NaverProfile;
@@ -13,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberSocialCreateDto {
     @NotBlank(message = "주소를 입력하십시오.")
-    private Location location;
+    private String location;
     @NotBlank(message = "전화번호를 입력하십시오.")
     private String phone;
     @NotNull(message = "인증 여부를 입력하시오")
@@ -21,7 +20,7 @@ public class MemberSocialCreateDto {
     private String imagePath;
 
     @Builder
-    public MemberSocialCreateDto(Location location,
+    public MemberSocialCreateDto(String location,
                                  String phone,
                                  Boolean isVerified,
                                  String imagePath) {

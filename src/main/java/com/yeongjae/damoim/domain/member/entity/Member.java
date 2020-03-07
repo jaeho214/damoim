@@ -1,13 +1,15 @@
 package com.yeongjae.damoim.domain.member.entity;
 
-import com.yeongjae.damoim.domain.location.entity.Location;
 import com.yeongjae.damoim.domain.member.dto.MemberUpdateDto;
 import com.yeongjae.damoim.global.jpa.JpaBasePersistable;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.*;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter @Setter
@@ -24,8 +26,7 @@ public class Member extends JpaBasePersistable {
     @Column(name = "password" , length = 30)
     private String password;
     @Column(name = "location", length = 50, nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private Location location;
+    private String location;
     @Column(unique = true, name = "phone", length = 20, nullable = false)
     private String phone;
     @Column(name = "sex", length = 5, nullable = false)
@@ -51,7 +52,7 @@ public class Member extends JpaBasePersistable {
     public Member(final String email,
                   final String nickName,
                   final String password,
-                  final Location location,
+                  final String location,
                   final String phone,
                   final String sex,
                   final String imagePath,

@@ -23,13 +23,13 @@ public class MemberSignInService {
     public String signIn(MemberSignInDto memberSignInDto) {
         Member member = memberRepository.findByEmail(memberSignInDto.getEmail()).orElseThrow(MemberNotFoundException::new);
 
-        checkPw(member, memberSignInDto);
+        checkPw(memberSignInDto, member);
 
         return jwtService.createJwt(member.getEmail());
     }
 
-    private void checkPw(Member member, MemberSignInDto memberSignInDto) {
-        if(passwordEncoder.matches(member.getPassword(), memberSignInDto.getPassword()))
+    private void checkPw(MemberSignInDto memberSignInDto, Member member) {
+        if(passwordEncoder.matches(memberSignInDto.getPassword(), member.getPassword()))
             return;
         throw new WrongPasswordException();
     }
