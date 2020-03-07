@@ -3,7 +3,6 @@ package com.yeongjae.damoim.domain.deal.entity;
 
 import com.yeongjae.damoim.global.jpa.JpaBasePersistable;
 import lombok.*;
-import org.codehaus.jackson.impl.JsonParserBase;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
