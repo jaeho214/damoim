@@ -77,7 +77,7 @@ public class Deal extends JpaBasePersistable {
         this.content = dealUpdateDto.getContent();
         this.category = DealCategory.fromString(dealUpdateDto.getCategory());
         this.price = dealUpdateDto.getPrice();
-        this.status = dealUpdateDto.getStatus();
+        this.status = DealStatus.fromString(dealUpdateDto.getStatus());
     }
 
     public void addImage(DealImage imagePath) {

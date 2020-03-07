@@ -10,4 +10,12 @@ public enum  DealStatus {
     DealStatus(String status){
         this.status = status;
     }
+
+    public static DealStatus fromString(String requestString){
+        for(DealStatus status : DealStatus.values()){
+            if(status.getStatus().equals(requestString))
+                return status;
+        }
+        return null;
+    }
 }
