@@ -1,5 +1,6 @@
 package com.yeongjae.damoim.domain.reply.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yeongjae.damoim.domain.board.entity.Board;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.global.jpa.JpaBasePersistable;
@@ -19,7 +20,8 @@ import javax.persistence.*;
 @DynamicUpdate
 public class Reply extends JpaBasePersistable {
 
-    private String title;
+    @Column(name = "content", nullable = false, length = 100)
+    private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -27,14 +29,19 @@ public class Reply extends JpaBasePersistable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false)
+    @JsonIgnore
     private Board board;
 
     @Builder
-    public Reply(final String title,
+    public Reply(final String content,
                  final Member member,
                  final Board board) {
-        this.title = title;
+        this.content = content;
         this.member = member;
         this.board = board;
+    }
+
+    public void updateReply(String content){
+        this.content = content;
     }
 }
