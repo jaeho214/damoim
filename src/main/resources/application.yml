@@ -36,9 +36,12 @@ cloud:
     s3:
       bucket : jaehobucket
       dirName: damoim
-      endpoint: https://jaehobucket.s3.ap-northeast-2.amazonaws.com/
     region:
       static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      instanceProfile: true
 
 
 
