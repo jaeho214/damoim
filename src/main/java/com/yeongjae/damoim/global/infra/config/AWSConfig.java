@@ -18,20 +18,20 @@ public class AWSConfig {
     @Value("${cloud.aws.region.static}")
     private String region;
 
-    @Value("${cloud.aws.credentials.accessKey}")
-	private String accessKey;
+//    @Value("${cloud.aws.credentials.accessKey}")
+//	private String accessKey;
+//
+//	@Value("${cloud.aws.credentials.secretKey}")
+//	private String secretKey;
 
-	@Value("${cloud.aws.credentials.secretKey}")
-	private String secretKey;
-
-    @Bean
-	public BasicAWSCredentials basicAWSCredentials() {
-		return new BasicAWSCredentials(accessKey, secretKey);
-	}
+//    @Bean
+//	public BasicAWSCredentials basicAWSCredentials() {
+//		return new BasicAWSCredentials(accessKey, secretKey);
+//	}
 
     @Bean
     public AmazonS3Client amazonS3Client(){
-        AmazonS3Client amazonS3Client = new AmazonS3Client(basicAWSCredentials());
+        AmazonS3Client amazonS3Client = new AmazonS3Client();
         amazonS3Client.setRegion(Region.getRegion(Regions.fromName(region)));
         return amazonS3Client;
     }
