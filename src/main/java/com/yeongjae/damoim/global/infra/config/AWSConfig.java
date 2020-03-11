@@ -1,18 +1,13 @@
 package com.yeongjae.damoim.global.infra.config;
 
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource(
-        value = {"classpath:application.yml", "classpath:aws.yml"}
-)
 public class AWSConfig {
 
     @Value("${cloud.aws.region.static}")
