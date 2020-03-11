@@ -46,6 +46,7 @@ class BoardGetServiceTest {
             .content("content")
             .imagePaths(new ArrayList<>())
             .location("강원도_강릉시")
+            .replyList(new ArrayList<>())
             .hits(0L)
             .build();
     private String email = "email@eamil.com";
@@ -79,5 +80,6 @@ class BoardGetServiceTest {
         //then
         assertThat(getBoard.getTitle()).isEqualTo(board.getTitle());
         assertThat(getBoard.getContent()).isEqualTo(board.getContent());
+        assertThat(getBoard.getReplyList().size()).isEqualTo(board.getReplyList().size());
     }
 }
