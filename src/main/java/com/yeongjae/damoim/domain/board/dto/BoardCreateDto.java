@@ -7,6 +7,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Getter @Setter
@@ -34,7 +35,7 @@ public class BoardCreateDto {
                 .content(this.content)
                 .location(this.location)
                 .member(member)
-                .imagePaths(new ArrayList<>())
+                .imagePaths(new HashSet<>())
                 .hits(0L)
                 .build();
     }

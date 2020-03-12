@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -43,7 +44,7 @@ class BoardDeleteServiceTest {
             .member(member)
             .title("제목")
             .content("content")
-            .imagePaths(new ArrayList<>())
+            .imagePaths(new HashSet<>())
             .location("강원도_강릉시")
             .hits(0L)
             .build();

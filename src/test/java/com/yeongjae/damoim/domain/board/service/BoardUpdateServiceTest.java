@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,7 +46,7 @@ class BoardUpdateServiceTest {
     Board board = Board.builder()
             .content("내용")
             .title("제목")
-            .imagePaths(new ArrayList<>())
+            .imagePaths(new HashSet<>())
             .member(member)
             .build();
 

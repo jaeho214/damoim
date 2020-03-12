@@ -6,9 +6,11 @@ import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.global.jpa.JpaBasePersistable;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -18,7 +20,7 @@ import javax.persistence.*;
 @AttributeOverride(name = "id", column = @Column(name = "reply_id"))
 @Where(clause = "deleted=0")
 @DynamicUpdate
-public class Reply extends JpaBasePersistable {
+public class Reply extends JpaBasePersistable implements Serializable {
 
     @Column(name = "content", nullable = false, length = 100)
     private String content;

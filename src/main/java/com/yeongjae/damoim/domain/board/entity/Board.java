@@ -9,8 +9,11 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -20,7 +23,7 @@ import java.util.List;
 @AttributeOverride(name = "id", column = @Column(name = "board_id"))
 @Where(clause = "deleted=0")
 @DynamicUpdate
-public class Board extends JpaBasePersistable {
+public class Board extends JpaBasePersistable implements Serializable {
     @Column(name = "title", length = 30, nullable = false)
     private String title;
 
@@ -37,12 +40,12 @@ public class Board extends JpaBasePersistable {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Column(name = "image_paths")
-    private List<BoardImage> imagePaths = new ArrayList<>();
+    private Set<BoardImage> imagePaths = new HashSet<>();
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Reply> replyList = new ArrayList<>();
+    private Set<Reply> replyList = new HashSet<>();
 
     @Builder
     public Board(final String title,
@@ -50,8 +53,8 @@ public class Board extends JpaBasePersistable {
                  final Long hits,
                  final String location,
                  final Member member,
-                 final List<BoardImage> imagePaths,
-                 final List<Reply> replyList) {
+                 final Set<BoardImage> imagePaths,
+                 final Set<Reply> replyList) {
         this.title = title;
         this.content = content;
         this.hits = hits;

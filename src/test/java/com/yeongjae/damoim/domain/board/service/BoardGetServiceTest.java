@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,9 +45,9 @@ class BoardGetServiceTest {
             .member(member)
             .title("제목")
             .content("content")
-            .imagePaths(new ArrayList<>())
+            .imagePaths(new HashSet<>())
             .location("강원도_강릉시")
-            .replyList(new ArrayList<>())
+            .replyList(new HashSet<>())
             .hits(0L)
             .build();
     private String email = "email@eamil.com";

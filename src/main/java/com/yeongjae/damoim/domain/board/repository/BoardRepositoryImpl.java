@@ -31,14 +31,16 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
     @Override
     public Optional<Board> fetchBoardById(Long board_id) {
         JPAQuery<Board> jpaQuery = new JPAQuery<>(entityManager);
-        jpaQuery = jpaQuery.select(board)
-                    .leftJoin(board.replyList, reply)
-                    .leftJoin(board.imagePaths, boardImage)
-                    .leftJoin(board.member, member)
-                    .fetchJoin()
-                    .where(board.id.eq(board_id));
 
-        Optional<Board> board = Optional.ofNullable((Board) jpaQuery.fetch());
-        return board;
+        Board board = jpaQuery
+                .select(this.board)
+                .from(this.board)
+                .innerJoin(this.board.member, member).fetchJoin()
+                .leftJoin(this.board.imagePaths, boardImage).fetchJoin()
+                .leftJoin(this.board.replyList, reply).fetchJoin()
+                .where(this.board.id.eq(board_id))
+                .fetchOne();
+
+        return Optional.ofNullable(board);
     }
 }
