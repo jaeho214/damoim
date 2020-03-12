@@ -12,11 +12,15 @@ public class MemberSignInDto {
     private String email;
     @NotBlank(message = "비밀번호를 입력하십시오.")
     private String password;
+    @NotBlank(message = "fcm 토큰을 입력하시오")
+    private String fcmToken;
 
     @Builder
     public MemberSignInDto(String email,
-                           String password) {
+                           String password,
+                           String fcmToken) {
         this.email = email;
         this.password = password;
+        this.fcmToken = fcmToken;
     }
 }

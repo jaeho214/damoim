@@ -75,4 +75,14 @@ public class MemberController {
     public ResponseEntity findPassword(@RequestBody PasswordFoundDto passwordFoundDto){
         return ResponseEntity.ok().body(memberCommonService.findPassword(passwordFoundDto));
     }
+
+    @GetMapping("/verify")
+    public ResponseEntity checkVerified(@RequestHeader("token") String token){
+        return ResponseEntity.ok().body(memberCommonService.checkVerified(token));
+    }
+
+    @GetMapping("/location")
+    public ResponseEntity checkLocation(@RequestHeader("token") String token){
+        return ResponseEntity.ok().body(memberCommonService.checkLocation(token));
+    }
 }

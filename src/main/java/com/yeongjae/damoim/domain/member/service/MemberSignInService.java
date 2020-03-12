@@ -25,6 +25,8 @@ public class MemberSignInService {
 
         checkPw(memberSignInDto, member);
 
+        member.updateToken(memberSignInDto.getFcmToken());
+
         return jwtService.createJwt(member.getEmail());
     }
 

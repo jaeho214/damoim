@@ -4,12 +4,14 @@ import com.yeongjae.damoim.domain.member.dto.MemberUpdateDto;
 import com.yeongjae.damoim.global.jpa.JpaBasePersistable;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter @Setter
@@ -18,12 +20,12 @@ import javax.persistence.Table;
 @AttributeOverride(name = "id", column = @Column(name = "member_id"))
 @Where(clause = "deleted=0")
 @DynamicUpdate
-public class Member extends JpaBasePersistable {
+public class Member extends JpaBasePersistable implements Serializable {
     @Column(unique = true, name = "email", length = 50, nullable = false)
     private String email;
     @Column(name = "nick_name", length = 30, nullable = false)
     private String nickName;
-    @Column(name = "password" , length = 30)
+    @Column(name = "password" , length = 65)
     private String password;
     @Column(name = "location", length = 50, nullable = false)
     private String location;
@@ -39,7 +41,7 @@ public class Member extends JpaBasePersistable {
     @Column(name = "birth", nullable = false, length = 20)
     private String birth;
 
-    @Column(name = "fcmToken", nullable = false)
+    @Column(name = "fcmToken")
     private String fcmToken;
 
     @Column(name = "role", nullable = false)
@@ -79,5 +81,9 @@ public class Member extends JpaBasePersistable {
         this.isVerified = memberUpdateDto.getIsVerified();
         this.phone = memberUpdateDto.getPhone();
         this.imagePath = memberUpdateDto.getImagePath();
+    }
+
+    public void updateToken(String token){
+        this.fcmToken = token;
     }
 }

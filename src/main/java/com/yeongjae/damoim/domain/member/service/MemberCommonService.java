@@ -5,6 +5,7 @@ import com.yeongjae.damoim.domain.member.dto.PasswordFoundDto;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
+import com.yeongjae.damoim.global.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class MemberCommonService {
 
     private final MemberRepository memberRepository;
+    private final JwtService jwtService;
 
     private final String CHAR_LOWER = "abcdefghijklmnopqrstuvwxyz";
     private final String CHAR_UPPER = CHAR_LOWER.toUpperCase();
@@ -49,6 +51,20 @@ public class MemberCommonService {
         if(!memberRepository.existsByEmail(email))
             return true;
         return false;
+    }
+
+    public boolean checkVerified(String token) {
+        String email = jwtService.findEmailByJwt(token);
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+
+        return member.getIsVerified();
+    }
+
+    public String checkLocation(String token){
+        String email = jwtService.findEmailByJwt(token);
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+
+        return member.getLocation();
     }
 
     private String generateRandomPassword(int length) {
