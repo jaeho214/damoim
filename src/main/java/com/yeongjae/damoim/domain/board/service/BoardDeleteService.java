@@ -6,6 +6,7 @@ import com.yeongjae.damoim.domain.board.repository.BoardRepository;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
+import com.yeongjae.damoim.global.config.CacheKey;
 import com.yeongjae.damoim.global.error.ErrorCodeType;
 import com.yeongjae.damoim.global.error.exception.BusinessLogicException;
 import com.yeongjae.damoim.global.jwt.JwtService;
@@ -24,6 +25,7 @@ public class BoardDeleteService {
     private final MemberRepository memberRepository;
     private final JwtService jwtService;
 
+    @CacheEvict(value = CacheKey.BOARD, key = "#board_id")
     public ResponseEntity deleteBoard(String token, Long board_id) {
         String email = jwtService.findEmailByJwt(token);
 

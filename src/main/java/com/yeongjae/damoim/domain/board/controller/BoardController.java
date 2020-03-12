@@ -8,8 +8,6 @@ import com.yeongjae.damoim.domain.board.service.BoardDeleteService;
 import com.yeongjae.damoim.domain.board.service.BoardGetService;
 import com.yeongjae.damoim.domain.board.service.BoardUpdateService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

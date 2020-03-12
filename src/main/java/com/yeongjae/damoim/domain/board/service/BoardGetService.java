@@ -6,10 +6,12 @@ import com.yeongjae.damoim.domain.board.repository.BoardRepository;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
+import com.yeongjae.damoim.global.config.CacheKey;
 import com.yeongjae.damoim.global.error.ErrorCodeType;
 import com.yeongjae.damoim.global.error.exception.BusinessLogicException;
 import com.yeongjae.damoim.global.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +32,7 @@ public class BoardGetService {
     private final JwtService jwtService;
 
     @Transactional(readOnly = true)
+    @Cacheable(value = CacheKey.BOARDS, key = "#location", unless = "#result==null")
     public List<Board> getBoards(String token, int pageNo, String location) {
         String email = jwtService.findEmailByJwt(token);
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
@@ -47,12 +50,13 @@ public class BoardGetService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public Board getBoard(String token, Long id){
+    @Transactional
+    @Cacheable(value = CacheKey.BOARD, key = "#board_id", unless = "#result==null")
+    public Board getBoard(String token, Long board_id){
         String email = jwtService.findEmailByJwt(token);
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
-        Board board = boardRepository.fetchBoardById(id).orElseThrow(BoardNotFoundException::new);
+        Board board = boardRepository.fetchBoardById(board_id).orElseThrow(BoardNotFoundException::new);
 
         if(!member.getIsVerified() || !member.getLocation().equals(board.getLocation()))
             throw new BusinessLogicException(ErrorCodeType.USER_UNAUTHORIZED);

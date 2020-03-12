@@ -7,9 +7,12 @@ import com.yeongjae.damoim.domain.board.entity.BoardImage;
 import com.yeongjae.damoim.domain.board.repository.BoardImageRepository;
 import com.yeongjae.damoim.domain.board.repository.BoardRepository;
 import com.yeongjae.damoim.domain.member.entity.Member;
+import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
+import com.yeongjae.damoim.global.config.CacheKey;
 import com.yeongjae.damoim.global.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,12 +32,12 @@ public class BoardCreateService {
 
     public Board createBoard(String token, BoardCreateDto boardCreateDto) {
         String email = jwtService.findEmailByJwt(token);
-        Member member = memberRepository.findByEmail(email).orElseThrow(MethodNotFoundException::new);
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
 
         Board board = boardCreateDto.of(member);
 
+        List<BoardImage> boardImageList = new ArrayList<>();
         if(boardCreateDto.getImagePaths() != null) {
-            List<BoardImage> boardImageList = new ArrayList<>();
             boardCreateDto.getImagePaths().forEach(imagePath ->
                     boardImageList.add(
                             BoardImage.builder()
@@ -46,9 +49,10 @@ public class BoardCreateService {
             boardImageList.stream()
                     .forEach(boardImage -> board.addImage(boardImage));
 
+            Board savedBoard = boardRepository.save(board);
             boardImageRepository.saveAll(boardImageList);
+            return savedBoard;
         }
-
         return boardRepository.save(board);
     }
 }

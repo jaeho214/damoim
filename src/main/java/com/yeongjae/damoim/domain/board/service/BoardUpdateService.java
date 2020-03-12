@@ -9,10 +9,13 @@ import com.yeongjae.damoim.domain.board.repository.BoardRepository;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
+import com.yeongjae.damoim.global.config.CacheKey;
 import com.yeongjae.damoim.global.error.ErrorCodeType;
 import com.yeongjae.damoim.global.error.exception.BusinessLogicException;
 import com.yeongjae.damoim.global.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +32,7 @@ public class BoardUpdateService {
     private final BoardImageRepository boardImageRepository;
     private final JwtService jwtService;
 
+    @CachePut(value = CacheKey.BOARD, key = "#boardUpdateDto.board_id")
     public Board updateBoard(String token, BoardUpdateDto boardUpdateDto) {
         String email = jwtService.findEmailByJwt(token);
 
