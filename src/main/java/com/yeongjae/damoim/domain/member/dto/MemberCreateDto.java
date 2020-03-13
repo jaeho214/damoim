@@ -40,6 +40,7 @@ public class MemberCreateDto {
                 .birth(this.birth)
                 .imagePath(this.imagePath)
                 .role("USER")
+                .provider("DAMOIM")
                 .build();
     }
     @Builder
