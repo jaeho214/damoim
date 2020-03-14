@@ -26,32 +26,15 @@ import java.util.List;
 public class BoardCreateService {
 
     private final BoardRepository boardRepository;
-    private final BoardImageRepository boardImageRepository;
-    private final MemberRepository memberRepository;
     private final JwtService jwtService;
+    private final BoardImageCreateService boardImageCreateService;
 
     public Board createBoard(String token, BoardCreateDto boardCreateDto) {
-        String email = jwtService.findEmailByJwt(token);
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
-
+        Member member = jwtService.findMemberByToken(token);
         Board board = boardCreateDto.of(member);
 
-        List<BoardImage> boardImageList = new ArrayList<>();
         if(boardCreateDto.getImagePaths() != null) {
-            boardCreateDto.getImagePaths().forEach(imagePath ->
-                    boardImageList.add(
-                            BoardImage.builder()
-                                    .imagePath(imagePath)
-                                    .board(board)
-                                    .build()
-                    ));
-
-            boardImageList.stream()
-                    .forEach(boardImage -> board.addImage(boardImage));
-
-            Board savedBoard = boardRepository.save(board);
-            boardImageRepository.saveAll(boardImageList);
-            return savedBoard;
+            return boardImageCreateService.saveBoardImage(boardCreateDto, board);
         }
         return boardRepository.save(board);
     }

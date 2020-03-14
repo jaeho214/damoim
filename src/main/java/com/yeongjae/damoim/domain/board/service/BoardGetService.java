@@ -27,20 +27,20 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BoardGetService {
 
+    private final int LIMIT = 10;
+
     private final BoardRepository boardRepository;
-    private final MemberRepository memberRepository;
     private final JwtService jwtService;
 
     @Transactional(readOnly = true)
     @Cacheable(value = CacheKey.BOARDS, key = "#location", unless = "#result==null")
     public List<Board> getBoards(String token, int pageNo, String location) {
-        String email = jwtService.findEmailByJwt(token);
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        Member member = jwtService.findMemberByToken(token);
 
         if(!member.getIsVerified() || !member.getLocation().equals(location))
             throw new BusinessLogicException(ErrorCodeType.USER_UNAUTHORIZED);
 
-        Pageable pageable = PageRequest.of(pageNo, 15, Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(--pageNo * LIMIT, 10, Sort.Direction.DESC, "createdAt");
         Page<Board> boards = boardRepository.findByLocation(location, pageable);
 
         if(boards == null)
@@ -53,8 +53,7 @@ public class BoardGetService {
     @Transactional
     @Cacheable(value = CacheKey.BOARD, key = "#board_id", unless = "#result==null")
     public Board getBoard(String token, Long board_id){
-        String email = jwtService.findEmailByJwt(token);
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        Member member = jwtService.findMemberByToken(token);
 
         Board board = boardRepository.fetchBoardById(board_id).orElseThrow(BoardNotFoundException::new);
 
@@ -64,5 +63,15 @@ public class BoardGetService {
         board.updateHits();
 
         return board;
+    }
+
+    public List<Board> getBoardByMember(String token, int pageNo) {
+        Member member = jwtService.findMemberByToken(token);
+
+        Pageable pageable = PageRequest.of(--pageNo * LIMIT, 10, Sort.Direction.DESC, "createdAt");
+        Page<Board> boards = boardRepository.findByMember(member, pageable);
+
+        return boards.stream()
+                .collect(Collectors.toList());
     }
 }

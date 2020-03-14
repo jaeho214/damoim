@@ -22,19 +22,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class BoardDeleteService {
 
     private final BoardRepository boardRepository;
-    private final MemberRepository memberRepository;
     private final JwtService jwtService;
+    private final BoardImageUpdateService boardImageUpdateService;
 
     @CacheEvict(value = CacheKey.BOARD, key = "#board_id")
     public ResponseEntity deleteBoard(String token, Long board_id) {
-        String email = jwtService.findEmailByJwt(token);
-
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        Member member = jwtService.findMemberByToken(token);
         Board board = boardRepository.findById(board_id).orElseThrow(BoardNotFoundException::new);
 
         checkMember(member, board.getMember());
 
         board.delete();
+
+        boardImageUpdateService.clearBoardImage(board);
 
         return ResponseEntity.noContent().build();
     }

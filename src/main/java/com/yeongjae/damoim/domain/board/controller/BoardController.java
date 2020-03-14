@@ -7,6 +7,7 @@ import com.yeongjae.damoim.domain.board.service.BoardCreateService;
 import com.yeongjae.damoim.domain.board.service.BoardDeleteService;
 import com.yeongjae.damoim.domain.board.service.BoardGetService;
 import com.yeongjae.damoim.domain.board.service.BoardUpdateService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ public class BoardController {
     private final BoardUpdateService boardUpdateService;
     private final BoardDeleteService boardDeleteService;
 
+    @ApiOperation("지역을 통해서 게시판 목록 불러오기 15개씩")
     @GetMapping("/list/{location}")
     public ResponseEntity getBoards(@RequestHeader("token") String token,
                                     @RequestParam("pageNo") int pageNo,
@@ -29,10 +31,18 @@ public class BoardController {
         return ResponseEntity.ok(boardGetService.getBoards(token, pageNo, location));
     }
 
+    @ApiOperation("게시물 상세보기")
     @GetMapping("/{id}")
     public ResponseEntity getBoard(@RequestHeader("token") String token,
                                    @PathVariable Long id){
         return ResponseEntity.ok().body(boardGetService.getBoard(token, id));
+    }
+
+    @ApiOperation("내가(회원) 쓴 게시물 목록 보기 10개씩")
+    @GetMapping("user")
+    public ResponseEntity getBoardByMember(@RequestHeader("token") String token,
+                                           @RequestParam("pageNo") int pageNo){
+        return ResponseEntity.ok(boardGetService.getBoardByMember(token, pageNo));
     }
 
     @PostMapping
