@@ -56,8 +56,7 @@ class BoardCreateServiceTest {
         //given
         Board board = boardCreateDto.of(member);
         given(boardRepository.save(board)).willReturn(board);
-        given(jwtService.findEmailByJwt(any(String.class))).willReturn(email);
-        given(memberRepository.findByEmail(any(String.class))).willReturn(Optional.of(member));
+        given(jwtService.findMemberByToken(any(String.class))).willReturn(member);
 
         //when
         Board savedBoard = boardCreateService.createBoard(token, boardCreateDto);

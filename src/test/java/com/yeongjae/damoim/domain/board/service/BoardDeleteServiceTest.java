@@ -1,5 +1,6 @@
 package com.yeongjae.damoim.domain.board.service;
 
+import com.yeongjae.damoim.domain.board.dto.BoardUpdateDto;
 import com.yeongjae.damoim.domain.board.entity.Board;
 import com.yeongjae.damoim.domain.board.repository.BoardRepository;
 import com.yeongjae.damoim.domain.member.entity.Member;
@@ -17,8 +18,7 @@ import java.util.HashSet;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,7 +27,7 @@ class BoardDeleteServiceTest {
     @Mock
     private BoardRepository boardRepository;
     @Mock
-    private MemberRepository memberRepository;
+    private BoardImageUpdateService boardImageUpdateService;
     @Mock
     private JwtService jwtService;
     @InjectMocks
@@ -54,8 +54,7 @@ class BoardDeleteServiceTest {
     @Test
     void deleteBoard() {
         //given
-        given(jwtService.findEmailByJwt(anyString())).willReturn(email);
-        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(member));
+        given(jwtService.findMemberByToken(anyString())).willReturn(member);
         given(boardRepository.findById(anyLong())).willReturn(Optional.ofNullable(board));
 
         //when

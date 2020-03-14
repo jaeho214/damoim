@@ -29,12 +29,9 @@ class BoardUpdateServiceTest {
     @Mock
     private BoardRepository boardRepository;
     @Mock
-    private MemberRepository memberRepository;
-    @Mock
     private JwtService jwtService;
     @Mock
-    private BoardImageRepository boardImageRepository;
-
+    private BoardImageUpdateService boardImageUpdateService;
     @InjectMocks
     private BoardUpdateService boardUpdateService;
 
@@ -51,14 +48,12 @@ class BoardUpdateServiceTest {
             .build();
 
     private String token = "token";
-    private String email = "email";
 
     @Test
     void updateBoard() {
         //given
         given(boardRepository.fetchBoardById(anyLong())).willReturn(Optional.of(board));
-        given(jwtService.findEmailByJwt(anyString())).willReturn(email);
-        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(member));
+        given(jwtService.findMemberByToken(anyString())).willReturn(member);
 
         //when
         Board updatedBoard = boardUpdateService.updateBoard(token, boardUpdateDto);

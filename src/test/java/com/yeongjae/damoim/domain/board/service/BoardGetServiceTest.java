@@ -57,8 +57,7 @@ class BoardGetServiceTest {
     @Test
     void getBoards() {
         //given
-        given(jwtService.findEmailByJwt(anyString())).willReturn(email);
-        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(member));
+        given(jwtService.findMemberByToken(anyString())).willReturn(member);
         given(boardRepository.findByLocation(anyString(), any())).willReturn(boardPage);
 
         //when
@@ -71,8 +70,7 @@ class BoardGetServiceTest {
     @Test
     void getBoard() {
         //given
-        given(jwtService.findEmailByJwt(anyString())).willReturn(email);
-        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(member));
+        given(jwtService.findMemberByToken(anyString())).willReturn(member);
         given(boardRepository.fetchBoardById(anyLong())).willReturn(Optional.ofNullable(board));
 
         //when
@@ -82,5 +80,18 @@ class BoardGetServiceTest {
         assertThat(getBoard.getTitle()).isEqualTo(board.getTitle());
         assertThat(getBoard.getContent()).isEqualTo(board.getContent());
         assertThat(getBoard.getReplyList().size()).isEqualTo(board.getReplyList().size());
+    }
+
+    @Test
+    void getBoardByMember(){
+        //given
+        given(jwtService.findMemberByToken(anyString())).willReturn(member);
+        given(boardRepository.findByMember(any(Member.class), any())).willReturn(boardPage);
+
+        //when
+        List<Board> boardList = boardGetService.getBoardByMember("token", 1);
+
+        //then
+        assertThat(boardList.size()).isEqualTo(boardPage.getSize());
     }
 }
