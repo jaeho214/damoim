@@ -34,8 +34,7 @@ class MemberDeleteServiceTest {
     void deleteMember() {
         //given
         String token = "token";
-        given(jwtService.findEmailByJwt(anyString())).willReturn(email);
-        given(memberRepository.findByEmail(anyString())).willReturn(Optional.ofNullable(member));
+        given(jwtService.findMemberByToken(anyString())).willReturn(member);
 
         //when
         ResponseEntity responseEntity = memberDeleteService.deleteMember(token);

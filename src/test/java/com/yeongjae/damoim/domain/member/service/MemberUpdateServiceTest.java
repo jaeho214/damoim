@@ -43,8 +43,7 @@ class MemberUpdateServiceTest {
     void updateMember() {
         //given
         Member updateMember = member.of();
-        given(memberRepository.findByEmail(email)).willReturn(Optional.of(updateMember));
-        given(jwtService.findEmailByJwt(any(String.class))).willReturn(email);
+        given(jwtService.findMemberByToken(any(String.class))).willReturn(updateMember);
 
         //when
         Member member = memberUpdateService.updateMember(token, this.member);

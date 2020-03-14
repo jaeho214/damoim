@@ -1,5 +1,8 @@
 package com.yeongjae.damoim.global.jwt;
 
+import com.yeongjae.damoim.domain.member.entity.Member;
+import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
+import com.yeongjae.damoim.domain.member.repository.MemberRepository;
 import com.yeongjae.damoim.global.error.exception.UserDefineException;
 import com.yeongjae.damoim.global.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
@@ -27,6 +30,7 @@ public class JwtService {
 
     private final long EXPIRE_TIME = 100000 * 60 * 60;
     private final UserDetailsServiceImpl userDetailsService;
+    private final MemberRepository memberRepository;
 
     @PostConstruct
     protected void init(){
@@ -85,6 +89,11 @@ public class JwtService {
     public Authentication getAuthentication(String token){
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.findEmailByJwt(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
+    public Member findMemberByToken(String token){
+        String email = findEmailByJwt(token);
+        return memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
     }
 
 }

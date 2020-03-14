@@ -37,8 +37,7 @@ class MemberGetServiceTest {
     @Test
     void getMember() {
         //given
-        given(memberRepository.findByEmail(member.getEmail())).willReturn(Optional.of(member));
-        given(jwtService.findEmailByJwt(any(String.class))).willReturn(member.getEmail());
+        given(jwtService.findMemberByToken(any(String.class))).willReturn(member);
 
         //when
         String token = "asdf";
