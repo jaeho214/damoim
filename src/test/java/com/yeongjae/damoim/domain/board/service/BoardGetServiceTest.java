@@ -1,5 +1,9 @@
 package com.yeongjae.damoim.domain.board.service;
 
+import com.yeongjae.damoim.domain.board.dto.BoardGetByLocationDto;
+import com.yeongjae.damoim.domain.board.dto.BoardGetByMemberDto;
+import com.yeongjae.damoim.domain.board.dto.BoardGetDto;
+import com.yeongjae.damoim.domain.board.dto.BoardGetPagingDto;
 import com.yeongjae.damoim.domain.board.entity.Board;
 import com.yeongjae.damoim.domain.board.repository.BoardRepository;
 import com.yeongjae.damoim.domain.member.entity.Member;
@@ -53,18 +57,20 @@ class BoardGetServiceTest {
     private String email = "email@eamil.com";
     private String token = "token";
     private Page<Board> boardPage = Mockito.mock(Page.class);
+    private Page<BoardGetByLocationDto> boardGetByLocationPage = Mockito.mock(Page.class);
+    private Page<BoardGetByMemberDto> boardGetByMemberDtoPage = Mockito.mock(Page.class);
 
     @Test
     void getBoards() {
         //given
         given(jwtService.findMemberByToken(anyString())).willReturn(member);
-        given(boardRepository.findByLocation(anyString(), any())).willReturn(boardPage);
+        given(boardRepository.findByLocation(anyString(), any())).willReturn(boardGetByLocationPage);
 
         //when
-        List<Board> boardList = boardGetService.getBoards(token,1, "강원도_강릉시");
+        BoardGetPagingDto boardList = boardGetService.getBoards(token,1, "강원도_강릉시");
 
         //then
-        assertThat(boardList.size()).isEqualTo(boardPage.getSize());
+        assertThat(boardList.getBoardGetByLocationDtoList().size()).isEqualTo(boardGetByLocationPage.getSize());
     }
 
     @Test
@@ -74,7 +80,7 @@ class BoardGetServiceTest {
         given(boardRepository.fetchBoardById(anyLong())).willReturn(Optional.ofNullable(board));
 
         //when
-        Board getBoard = boardGetService.getBoard("token", 1L);
+        BoardGetDto getBoard = boardGetService.getBoard("token", 1L);
 
         //then
         assertThat(getBoard.getTitle()).isEqualTo(board.getTitle());
@@ -86,12 +92,12 @@ class BoardGetServiceTest {
     void getBoardByMember(){
         //given
         given(jwtService.findMemberByToken(anyString())).willReturn(member);
-        given(boardRepository.findByMember(any(Member.class), any())).willReturn(boardPage);
+        given(boardRepository.findByMember(any(Member.class), any())).willReturn(boardGetByMemberDtoPage);
 
         //when
-        List<Board> boardList = boardGetService.getBoardByMember("token", 1);
+        BoardGetPagingDto boardList = boardGetService.getBoardByMember("token", 1);
 
         //then
-        assertThat(boardList.size()).isEqualTo(boardPage.getSize());
+        assertThat(boardList.getBoardGetByMemberDtoList().size()).isEqualTo(boardPage.getSize());
     }
 }

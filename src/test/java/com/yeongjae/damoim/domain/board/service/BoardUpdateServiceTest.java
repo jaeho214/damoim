@@ -1,5 +1,6 @@
 package com.yeongjae.damoim.domain.board.service;
 
+import com.yeongjae.damoim.domain.board.dto.BoardGetDto;
 import com.yeongjae.damoim.domain.board.dto.BoardUpdateDto;
 import com.yeongjae.damoim.domain.board.entity.Board;
 import com.yeongjae.damoim.domain.board.repository.BoardImageRepository;
@@ -56,7 +57,7 @@ class BoardUpdateServiceTest {
         given(jwtService.findMemberByToken(anyString())).willReturn(member);
 
         //when
-        Board updatedBoard = boardUpdateService.updateBoard(token, boardUpdateDto);
+        BoardGetDto updatedBoard = boardUpdateService.updateBoard(token, boardUpdateDto);
 
         //then
         assertThat(updatedBoard.getContent()).isEqualTo(boardUpdateDto.getContent());

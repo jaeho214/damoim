@@ -2,8 +2,7 @@ package com.yeongjae.damoim.domain.board.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.yeongjae.damoim.domain.board.dto.BoardCreateDto;
-import com.yeongjae.damoim.domain.board.dto.BoardUpdateDto;
+import com.yeongjae.damoim.domain.board.dto.*;
 import com.yeongjae.damoim.domain.board.entity.Board;
 import com.yeongjae.damoim.domain.board.service.BoardCreateService;
 import com.yeongjae.damoim.domain.board.service.BoardDeleteService;
@@ -53,6 +52,8 @@ class BoardControllerTest {
 
     private BoardCreateDto boardCreateDto = new EasyRandom().nextObject(BoardCreateDto.class);
     private BoardUpdateDto boardUpdateDto = new EasyRandom().nextObject(BoardUpdateDto.class);
+    private BoardGetPagingDto boardGetPagingDto = new EasyRandom().nextObject(BoardGetPagingDto.class);
+    private BoardGetDto boardGetDtoFixture = new EasyRandom().nextObject(BoardGetDto.class);
     private Board boardFixture = new EasyRandom().nextObject(Board.class);
     private Member memberFixture = new EasyRandom().nextObject(Member.class);
     @BeforeEach
@@ -65,7 +66,7 @@ class BoardControllerTest {
     void getBoards() throws Exception {
         Board board = boardCreateDto.of(memberFixture);
         String location = "location";
-        given(boardGetService.getBoards(any(String.class), any(Integer.class), any(String.class))).willReturn(Arrays.asList(board));
+        given(boardGetService.getBoards(any(String.class), any(Integer.class), any(String.class))).willReturn(boardGetPagingDto);
 
         mockMvc.perform(
                 get("/damoim/board/list/{location}",location)
@@ -73,8 +74,7 @@ class BoardControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("pageNo", String.valueOf(1))
         )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].title").value(board.getTitle()));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -83,7 +83,7 @@ class BoardControllerTest {
 //        Reply reply = new EasyRandom().nextObject(Reply.class);
 //        reply.setBoard(boardFixture);
 //        boardFixture.setReplyList(Arrays.asList(reply));
-        given(boardGetService.getBoard(any(String.class), any(Long.class))).willReturn(boardFixture);
+        given(boardGetService.getBoard(any(String.class), any(Long.class))).willReturn(boardGetDtoFixture);
 
         mockMvc.perform(
                 get("/damoim/board/{id}", board_id)
@@ -95,9 +95,22 @@ class BoardControllerTest {
     }
 
     @Test
+    void getBoardByMember() throws Exception{
+        given(boardGetService.getBoardByMember(anyString(), anyInt())).willReturn(boardGetPagingDto);
+
+        mockMvc.perform(
+                get("/damoim/board/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("token", "token")
+                .param("pageNo", String.valueOf(1))
+        )
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void createBoard() throws Exception{
         Board board = boardCreateDto.of(memberFixture);
-        given(boardCreateService.createBoard(any(String.class), any(BoardCreateDto.class))).willReturn(board);
+        given(boardCreateService.createBoard(any(String.class), any(BoardCreateDto.class))).willReturn(boardGetDtoFixture);
 
         mockMvc.perform(
                 post("/damoim/board")
@@ -112,7 +125,7 @@ class BoardControllerTest {
 
     @Test
     void updateBoard() throws Exception{
-        given(boardUpdateService.updateBoard(any(String.class), any(BoardUpdateDto.class))).willReturn(boardFixture);
+        given(boardUpdateService.updateBoard(any(String.class), any(BoardUpdateDto.class))).willReturn(boardGetDtoFixture);
 
         mockMvc.perform(
                 put("/damoim/board")

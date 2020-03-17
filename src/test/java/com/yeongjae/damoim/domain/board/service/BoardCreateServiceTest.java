@@ -1,6 +1,7 @@
 package com.yeongjae.damoim.domain.board.service;
 
 import com.yeongjae.damoim.domain.board.dto.BoardCreateDto;
+import com.yeongjae.damoim.domain.board.dto.BoardGetDto;
 import com.yeongjae.damoim.domain.board.entity.Board;
 import com.yeongjae.damoim.domain.board.repository.BoardRepository;
 import com.yeongjae.damoim.domain.member.entity.Member;
@@ -59,7 +60,7 @@ class BoardCreateServiceTest {
         given(jwtService.findMemberByToken(any(String.class))).willReturn(member);
 
         //when
-        Board savedBoard = boardCreateService.createBoard(token, boardCreateDto);
+        BoardGetDto savedBoard = boardCreateService.createBoard(token, boardCreateDto);
 
         //then
         assertThat(savedBoard.getContent()).isEqualTo(board.getContent());
