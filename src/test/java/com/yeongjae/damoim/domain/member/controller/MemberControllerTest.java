@@ -3,10 +3,12 @@ package com.yeongjae.damoim.domain.member.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.yeongjae.damoim.domain.member.dto.MemberCreateDto;
+import com.yeongjae.damoim.domain.member.dto.MemberGetDto;
 import com.yeongjae.damoim.domain.member.dto.MemberSignInDto;
 import com.yeongjae.damoim.domain.member.dto.MemberUpdateDto;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.service.*;
+import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,6 +54,7 @@ class MemberControllerTest {
     private ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule());
 
+    private MemberGetDto memberGetDtoFixture = new EasyRandom().nextObject(MemberGetDto.class);
     private MemberCreateDto memberCreateDto = MemberCreateDto.builder()
             .email("email@gmail.com")
             .password("1")
@@ -73,7 +76,7 @@ class MemberControllerTest {
     void createMember() throws Exception {
         Member member = memberCreateDto.of();
         //아무런 MemberCreateDto 타입의 객체만을 받아도 항상 member 객체를 리턴해주도록 하기
-        given(memberCreateService.createMember(any(MemberCreateDto.class))).willReturn(member);
+        given(memberCreateService.createMember(any(MemberCreateDto.class))).willReturn(memberGetDtoFixture);
 
         mockMvc.perform(
                 post("/damoim/sign")
@@ -109,15 +112,15 @@ class MemberControllerTest {
     @DisplayName("회원 정보 조회")
     void getMember() throws Exception {
         Member member = memberCreateDto.of();
-        given(memberGetService.getMember(any(String.class))).willReturn(member);
+        given(memberGetService.getMember(any(String.class))).willReturn(memberGetDtoFixture);
 
         mockMvc.perform(
                 get("/damoim/sign")
                     .header("token", "ssssssssssssssss")
         )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nickName").value(member.getNickName()))
-                .andExpect(jsonPath("$.email").value(member.getEmail()));
+                .andExpect(jsonPath("$.nickName").value(memberGetDtoFixture.getNickName()))
+                .andExpect(jsonPath("$.email").value(memberGetDtoFixture.getEmail()));
     }
 
     @Test
@@ -130,7 +133,7 @@ class MemberControllerTest {
                 .phone("0000")
                 .build();
         Member member = memberUpdateDto.of();
-        given(memberUpdateService.updateMember(any(String.class),any(MemberUpdateDto.class))).willReturn(member);
+        given(memberUpdateService.updateMember(any(String.class),any(MemberUpdateDto.class))).willReturn(memberGetDtoFixture);
         mockMvc.perform(
                 put("/damoim/sign")
                 .header("token", "sssssssssssssssss")

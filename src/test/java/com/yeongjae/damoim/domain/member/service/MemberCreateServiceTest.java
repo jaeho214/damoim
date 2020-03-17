@@ -1,6 +1,7 @@
 package com.yeongjae.damoim.domain.member.service;
 
 import com.yeongjae.damoim.domain.member.dto.MemberCreateDto;
+import com.yeongjae.damoim.domain.member.dto.MemberGetDto;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,7 @@ class MemberCreateServiceTest {
         given(memberRepository.save(member)).willReturn(member);
 
         //when
-        Member savedMember = memberCreateService.createMember(memberCreateDto);
+        MemberGetDto savedMember = memberCreateService.createMember(memberCreateDto);
 
         //then
         assertThat(savedMember.getEmail()).isEqualTo(member.getEmail());

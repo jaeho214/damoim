@@ -1,5 +1,6 @@
 package com.yeongjae.damoim.domain.member.service;
 
+import com.yeongjae.damoim.domain.member.dto.MemberGetDto;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
 import com.yeongjae.damoim.global.jwt.JwtService;
@@ -41,7 +42,7 @@ class MemberGetServiceTest {
 
         //when
         String token = "asdf";
-        Member member = memberGetService.getMember(token);
+        MemberGetDto member = memberGetService.getMember(token);
 
         //then
         assertThat(member.getLocation()).isEqualTo(this.member.getLocation());

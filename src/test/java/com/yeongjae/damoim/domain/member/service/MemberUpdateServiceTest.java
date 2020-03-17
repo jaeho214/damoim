@@ -1,5 +1,6 @@
 package com.yeongjae.damoim.domain.member.service;
 
+import com.yeongjae.damoim.domain.member.dto.MemberGetDto;
 import com.yeongjae.damoim.domain.member.dto.MemberUpdateDto;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
@@ -46,7 +47,7 @@ class MemberUpdateServiceTest {
         given(jwtService.findMemberByToken(any(String.class))).willReturn(updateMember);
 
         //when
-        Member member = memberUpdateService.updateMember(token, this.member);
+        MemberGetDto member = memberUpdateService.updateMember(token, this.member);
 
         //then
         assertThat(member.getNickName()).isEqualTo(this.member.getNickName());
