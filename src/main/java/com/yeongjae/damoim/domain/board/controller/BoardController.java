@@ -1,6 +1,7 @@
 package com.yeongjae.damoim.domain.board.controller;
 
 import com.yeongjae.damoim.domain.board.dto.BoardCreateDto;
+import com.yeongjae.damoim.domain.board.dto.BoardGetDto;
 import com.yeongjae.damoim.domain.board.dto.BoardUpdateDto;
 import com.yeongjae.damoim.domain.board.entity.Board;
 import com.yeongjae.damoim.domain.board.service.BoardCreateService;
@@ -23,12 +24,12 @@ public class BoardController {
     private final BoardUpdateService boardUpdateService;
     private final BoardDeleteService boardDeleteService;
 
-    @ApiOperation("지역을 통해서 게시판 목록 불러오기 15개씩")
+    @ApiOperation("지역을 통해서 게시판 목록 불러오기 10개씩")
     @GetMapping("/list/{location}")
     public ResponseEntity getBoards(@RequestHeader("token") String token,
                                     @RequestParam("pageNo") int pageNo,
                                     @PathVariable String location){
-        return ResponseEntity.ok(boardGetService.getBoards(token, pageNo, location));
+        return ResponseEntity.ok().body(boardGetService.getBoards(token, pageNo, location));
     }
 
     @ApiOperation("게시물 상세보기")
@@ -42,20 +43,20 @@ public class BoardController {
     @GetMapping("user")
     public ResponseEntity getBoardByMember(@RequestHeader("token") String token,
                                            @RequestParam("pageNo") int pageNo){
-        return ResponseEntity.ok(boardGetService.getBoardByMember(token, pageNo));
+        return ResponseEntity.ok().body(boardGetService.getBoardByMember(token, pageNo));
     }
 
     @PostMapping
     public ResponseEntity createBoard(@RequestHeader("token") String token,
                                       @RequestBody BoardCreateDto boardCreateDto){
-        Board savedBoard = boardCreateService.createBoard(token, boardCreateDto);
+        BoardGetDto savedBoard = boardCreateService.createBoard(token, boardCreateDto);
         return ResponseEntity.created(URI.create("/damoim/board/" + savedBoard.getId())).body(savedBoard);
     }
 
     @PutMapping
     public ResponseEntity updateBoard(@RequestHeader("token") String token,
                                       @RequestBody BoardUpdateDto boardUpdateDto){
-        Board updatedBoard = boardUpdateService.updateBoard(token, boardUpdateDto);
+        BoardGetDto updatedBoard = boardUpdateService.updateBoard(token, boardUpdateDto);
         return ResponseEntity.ok(updatedBoard);
     }
 

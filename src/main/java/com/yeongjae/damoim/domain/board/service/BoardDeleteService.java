@@ -25,7 +25,7 @@ public class BoardDeleteService {
     private final JwtService jwtService;
     private final BoardImageUpdateService boardImageUpdateService;
 
-    @CacheEvict(value = CacheKey.BOARD, key = "#board_id")
+    //@CacheEvict(value = CacheKey.BOARD, key = "#board_id")
     public ResponseEntity deleteBoard(String token, Long board_id) {
         Member member = jwtService.findMemberByToken(token);
         Board board = boardRepository.findById(board_id).orElseThrow(BoardNotFoundException::new);

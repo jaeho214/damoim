@@ -1,9 +1,11 @@
 package com.yeongjae.damoim.domain.board.service;
 
+import com.yeongjae.damoim.domain.board.dto.BoardGetDto;
 import com.yeongjae.damoim.domain.board.dto.BoardUpdateDto;
 import com.yeongjae.damoim.domain.board.entity.Board;
 import com.yeongjae.damoim.domain.board.exception.BoardNotFoundException;
 import com.yeongjae.damoim.domain.board.repository.BoardRepository;
+import com.yeongjae.damoim.domain.member.dto.MemberGetDto;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.global.config.CacheKey;
 import com.yeongjae.damoim.global.error.ErrorCodeType;
@@ -23,8 +25,8 @@ public class BoardUpdateService {
     private final BoardImageUpdateService boardImageUpdateService;
     private final JwtService jwtService;
 
-    @CachePut(value = CacheKey.BOARD, key = "#boardUpdateDto.board_id")
-    public Board updateBoard(String token, BoardUpdateDto boardUpdateDto) {
+    //@CachePut(value = CacheKey.BOARD, key = "#boardUpdateDto.board_id")
+    public BoardGetDto updateBoard(String token, BoardUpdateDto boardUpdateDto) {
         Member member = jwtService.findMemberByToken(token);
         Board board = boardRepository.fetchBoardById(boardUpdateDto.getBoard_id()).orElseThrow(BoardNotFoundException::new);
 
@@ -36,7 +38,7 @@ public class BoardUpdateService {
             boardImageUpdateService.saveBoardImage(boardUpdateDto, board);
         }
 
-        return board;
+        return BoardGetDto.toDto(board, MemberGetDto.toDto(member));
     }
 
     private void checkMember(Member member, Member writer) {
