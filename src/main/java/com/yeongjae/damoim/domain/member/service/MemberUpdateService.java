@@ -1,5 +1,6 @@
 package com.yeongjae.damoim.domain.member.service;
 
+import com.yeongjae.damoim.domain.member.dto.MemberGetDto;
 import com.yeongjae.damoim.domain.member.dto.MemberUpdateDto;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
@@ -23,19 +24,16 @@ import java.util.stream.Collectors;
 @Transactional
 public class MemberUpdateService {
 
-    private final MemberRepository memberRepository;
     private final JwtService jwtService;
 
-    public Member updateMember(String token, MemberUpdateDto memberUpdateDto) {
-        String email = jwtService.findEmailByJwt(token);
-
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+    public MemberGetDto updateMember(String token, MemberUpdateDto memberUpdateDto) {
+        Member member = jwtService.findMemberByToken(token);
 
         checkPw(member, memberUpdateDto);
 
         member.updateMember(memberUpdateDto);
 
-        return member;
+        return MemberGetDto.toDto(member);
     }
 
     private void checkPw(Member member, MemberUpdateDto memberUpdateDto) {

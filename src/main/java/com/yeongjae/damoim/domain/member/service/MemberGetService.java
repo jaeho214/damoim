@@ -1,5 +1,6 @@
 package com.yeongjae.damoim.domain.member.service;
 
+import com.yeongjae.damoim.domain.member.dto.MemberGetDto;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
@@ -12,13 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberGetService {
 
-    private final MemberRepository memberRepository;
     private final JwtService jwtService;
 
     @Transactional(readOnly = true)
-    public Member getMember(String token){
-        String email = jwtService.findEmailByJwt(token);
-        return memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+    public MemberGetDto getMember(String token){
+        Member member = jwtService.findMemberByToken(token);
+        return MemberGetDto.toDto(member);
     }
 
 }

@@ -15,12 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberDeleteService {
 
     private final JwtService jwtService;
-    private final MemberRepository memberRepository;
 
     public ResponseEntity deleteMember(String token) {
-        String email = jwtService.findEmailByJwt(token);
-
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        Member member = jwtService.findMemberByToken(token);
 
         member.delete();
 
