@@ -31,6 +31,8 @@ class DealDeleteServiceTest {
     private MemberRepository memberRepository;
     @Mock
     private DealRepository dealRepository;
+    @Mock
+    private DealImageUpdateService dealImageUpdateService;
 
     private String token = "token";
     private String email = "email@email.com";
@@ -52,8 +54,7 @@ class DealDeleteServiceTest {
     @Test
     void deleteDeal() {
         //given
-        given(jwtService.findEmailByJwt(anyString())).willReturn(email);
-        given(memberRepository.findByEmail(anyString())).willReturn(Optional.ofNullable(memberFixture));
+        given(jwtService.findMemberByToken(anyString())).willReturn(memberFixture);
         given(dealRepository.findById(anyLong())).willReturn(Optional.ofNullable(dealFixture));
 
         //when

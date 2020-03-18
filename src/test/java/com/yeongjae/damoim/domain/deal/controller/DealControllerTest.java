@@ -3,6 +3,8 @@ package com.yeongjae.damoim.domain.deal.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.yeongjae.damoim.domain.deal.dto.DealCreateDto;
+import com.yeongjae.damoim.domain.deal.dto.DealGetDto;
+import com.yeongjae.damoim.domain.deal.dto.DealGetPagingDto;
 import com.yeongjae.damoim.domain.deal.dto.DealUpdateDto;
 import com.yeongjae.damoim.domain.deal.entity.Deal;
 import com.yeongjae.damoim.domain.deal.service.DealCreateService;
@@ -51,6 +53,8 @@ class DealControllerTest {
 
     private Member memberFixture = new EasyRandom().nextObject(Member.class);
     private Deal dealFixture = new EasyRandom().nextObject(Deal.class);
+    private DealGetDto dealGetDtoFixture = new EasyRandom().nextObject(DealGetDto.class);
+    private DealGetPagingDto dealGetPagingDtoFixture = new EasyRandom().nextObject(DealGetPagingDto.class);
     private DealUpdateDto dealUpdateDtoFixture = new EasyRandom().nextObject(DealUpdateDto.class);
     private DealCreateDto dealCreateDtoFixture = DealCreateDto.builder()
             .content("content")
@@ -68,7 +72,7 @@ class DealControllerTest {
     @Test
     void createDeal() throws Exception {
         Deal deal = dealCreateDtoFixture.of(memberFixture);
-        given(dealCreateService.createDeal(anyString(), any(DealCreateDto.class))).willReturn(deal);
+        given(dealCreateService.createDeal(anyString(), any(DealCreateDto.class))).willReturn(dealGetDtoFixture);
 
         mockMvc.perform(
                 post("/damoim/deal")
@@ -85,7 +89,7 @@ class DealControllerTest {
     void getDeals() throws Exception {
         Deal deal = dealCreateDtoFixture.of(memberFixture);
         String location = "강원도_원주시";
-        given(dealGetService.getDeals(anyString(), anyInt())).willReturn(Arrays.asList(deal));
+        given(dealGetService.getDeals(anyString(), anyInt())).willReturn(dealGetPagingDtoFixture);
 
         mockMvc.perform(
                 get("/damoim/deal/list/{location}", location)
@@ -93,14 +97,13 @@ class DealControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("pageNo", String.valueOf(1))
         )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].title").value(deal.getTitle()));
+                .andExpect(status().isOk());
     }
 
     @Test
     void getDeal() throws Exception {
         Long deal_id = 1L;
-        given(dealGetService.getDeal(anyString(), anyLong())).willReturn(dealFixture);
+        given(dealGetService.getDeal(anyString(), anyLong())).willReturn(dealGetDtoFixture);
 
         mockMvc.perform(
                 get("/damoim/deal/{deal_id}", deal_id)
@@ -112,8 +115,21 @@ class DealControllerTest {
     }
 
     @Test
+    void getDealByMember() throws Exception{
+        given(dealGetService.getDealByMember(anyString(), anyInt())).willReturn(dealGetPagingDtoFixture);
+
+        mockMvc.perform(
+                get("/damoim/deal/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("token", "token")
+                .param("pageNo", String.valueOf(1))
+        )
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void updateDeal() throws Exception {
-        given(dealUpdateService.updateDeal(anyString(), any(DealUpdateDto.class))).willReturn(dealFixture);
+        given(dealUpdateService.updateDeal(anyString(), any(DealUpdateDto.class))).willReturn(dealGetDtoFixture);
 
         mockMvc.perform(
                 put("/damoim/deal")

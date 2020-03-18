@@ -1,5 +1,6 @@
 package com.yeongjae.damoim.domain.deal.service;
 
+import com.yeongjae.damoim.domain.deal.dto.DealGetDto;
 import com.yeongjae.damoim.domain.deal.dto.DealUpdateDto;
 import com.yeongjae.damoim.domain.deal.entity.Deal;
 import com.yeongjae.damoim.domain.deal.entity.DealImage;
@@ -32,7 +33,7 @@ class DealUpdateServiceTest {
     @Mock
     private DealRepository dealRepository;
     @Mock
-    private DealImageRepository dealImageRepository;
+    private DealImageUpdateService dealImageUpdateService;
     @Mock
     private MemberRepository memberRepository;
     @Mock
@@ -62,13 +63,11 @@ class DealUpdateServiceTest {
     @Test
     void updateDeal() {
         //given
-        given(jwtService.findEmailByJwt(anyString())).willReturn(email);
-        given(memberRepository.findByEmail(anyString())).willReturn(Optional.ofNullable(memberFixture));
+        given(jwtService.findMemberByToken(anyString())).willReturn(memberFixture);
         given(dealRepository.fetchById(anyLong())).willReturn(Optional.ofNullable(dealFixture));
-        given(dealImageRepository.saveAll(anyList())).willReturn(dealImages);
 
         //when
-        Deal updateDeal = dealUpdateService.updateDeal(token, dealUpdateDtoFixture);
+        DealGetDto updateDeal = dealUpdateService.updateDeal(token, dealUpdateDtoFixture);
 
         //then
         assertThat(updateDeal.getContent()).isEqualTo(dealUpdateDtoFixture.getContent());
