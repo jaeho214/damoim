@@ -1,11 +1,13 @@
 package com.yeongjae.damoim.domain.deal.service;
 
+import com.yeongjae.damoim.domain.deal.dto.DealGetDto;
 import com.yeongjae.damoim.domain.deal.dto.DealUpdateDto;
 import com.yeongjae.damoim.domain.deal.entity.Deal;
 import com.yeongjae.damoim.domain.deal.entity.DealImage;
 import com.yeongjae.damoim.domain.deal.exception.DealNotFoundException;
 import com.yeongjae.damoim.domain.deal.repository.DealImageRepository;
 import com.yeongjae.damoim.domain.deal.repository.DealRepository;
+import com.yeongjae.damoim.domain.member.dto.MemberGetDto;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
@@ -25,14 +27,11 @@ import java.util.List;
 public class DealUpdateService {
 
     private final DealRepository dealRepository;
-    private final DealImageRepository dealImageRepository;
-    private final MemberRepository memberRepository;
+    private final DealImageUpdateService dealImageUpdateService;
     private final JwtService jwtService;
 
-    public Deal updateDeal(String token, DealUpdateDto dealUpdateDto) {
-        String email = jwtService.findEmailByJwt(token);
-
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+    public DealGetDto updateDeal(String token, DealUpdateDto dealUpdateDto) {
+        Member member = jwtService.findMemberByToken(token);
 
         Deal deal = dealRepository.fetchById(dealUpdateDto.getDeal_id()).orElseThrow(DealNotFoundException::new);
 
@@ -41,24 +40,9 @@ public class DealUpdateService {
         deal.updateDeal(dealUpdateDto);
 
         if(dealUpdateDto.getImagePaths() != null) {
-            if (deal.getImagePaths() != null) {
-                deal.getImagePaths().forEach(dealImage -> dealImage.delete());
-                deal.getImagePaths().clear();
-            }
-
-            List<DealImage> dealImageList = new ArrayList<>();
-            dealUpdateDto.getImagePaths().forEach(imagePath ->
-                    dealImageList.add(
-                            DealImage.builder()
-                                    .imagePath(imagePath)
-                                    .deal(deal)
-                                    .build()
-                    ));
-
-            dealImageRepository.saveAll(dealImageList);
-            dealImageList.forEach(dealImage -> deal.addImage(dealImage));
+            dealImageUpdateService.saveDealImage(dealUpdateDto, deal);
         }
-        return deal;
+        return DealGetDto.toDto(deal, MemberGetDto.toDto(member));
     }
 
     private void checkMember(Member updater, Member writer) {

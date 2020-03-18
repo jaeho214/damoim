@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import java.util.List;
 @AttributeOverride(name = "id", column = @Column(name = "deal_id"))
 @Where(clause = "deleted=0")
 @DynamicUpdate
-public class Deal extends JpaBasePersistable {
+public class Deal extends JpaBasePersistable implements Serializable {
     @Column(name = "title", length = 30, nullable = false)
     private String title;
 

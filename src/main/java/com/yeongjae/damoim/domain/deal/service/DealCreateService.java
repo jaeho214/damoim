@@ -1,10 +1,12 @@
 package com.yeongjae.damoim.domain.deal.service;
 
 import com.yeongjae.damoim.domain.deal.dto.DealCreateDto;
+import com.yeongjae.damoim.domain.deal.dto.DealGetDto;
 import com.yeongjae.damoim.domain.deal.entity.Deal;
 import com.yeongjae.damoim.domain.deal.entity.DealImage;
 import com.yeongjae.damoim.domain.deal.repository.DealImageRepository;
 import com.yeongjae.damoim.domain.deal.repository.DealRepository;
+import com.yeongjae.damoim.domain.member.dto.MemberGetDto;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
@@ -22,32 +24,20 @@ import java.util.List;
 public class DealCreateService {
 
     private final DealRepository dealRepository;
-    private final DealImageRepository dealImageRepository;
-    private final MemberRepository memberRepository;
+    private final DealImageCreateService dealImageCreateService;
     private final JwtService jwtService;
 
-    public Deal createDeal(String token, DealCreateDto dealCreateDto) {
-        String email = jwtService.findEmailByJwt(token);
-
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+    public DealGetDto createDeal(String token, DealCreateDto dealCreateDto) {
+        Member member = jwtService.findMemberByToken(token);
 
         Deal deal = dealCreateDto.of(member);
 
         if(dealCreateDto.getImagePaths() != null) {
-            List<DealImage> dealImageList = new ArrayList<>();
-            dealCreateDto.getImagePaths().forEach(imagePath ->
-                    dealImageList.add(
-                            DealImage.builder()
-                                    .imagePath(imagePath)
-                                    .deal(deal)
-                                    .build()
-                    ));
-
-            dealImageList.forEach(dealImage -> deal.addImage(dealImage));
-
-            dealImageRepository.saveAll(dealImageList);
+            Deal savedDeal = dealImageCreateService.saveDealImage(dealCreateDto, deal);
+            return DealGetDto.toDto(savedDeal, MemberGetDto.toDto(member));
         }
 
-        return dealRepository.save(deal);
+        Deal savedDeal = dealRepository.save(deal);
+        return DealGetDto.toDto(savedDeal, MemberGetDto.toDto(member));
     }
 }

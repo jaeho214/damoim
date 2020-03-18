@@ -1,6 +1,7 @@
 package com.yeongjae.damoim.domain.deal.controller;
 
 import com.yeongjae.damoim.domain.deal.dto.DealCreateDto;
+import com.yeongjae.damoim.domain.deal.dto.DealGetDto;
 import com.yeongjae.damoim.domain.deal.dto.DealUpdateDto;
 import com.yeongjae.damoim.domain.deal.entity.Deal;
 import com.yeongjae.damoim.domain.deal.service.DealCreateService;
@@ -25,20 +26,26 @@ public class DealController {
     @PostMapping
     public ResponseEntity createDeal(@RequestHeader("token") String token,
                                      @RequestBody DealCreateDto dealCreateDto){
-        Deal savedDeal = dealCreateService.createDeal(token, dealCreateDto);
+        DealGetDto savedDeal = dealCreateService.createDeal(token, dealCreateDto);
         return ResponseEntity.created(URI.create("damoim/deal/" + savedDeal.getId())).body(savedDeal);
     }
 
     @GetMapping("list/{location}")
     public ResponseEntity getDeals(@PathVariable String location,
                                    @RequestParam("pageNo") int pageNo){
-        return ResponseEntity.ok(dealGetService.getDeals(location, pageNo));
+        return ResponseEntity.ok().body(dealGetService.getDeals(location, pageNo));
     }
 
     @GetMapping("/{deal_id}")
     public ResponseEntity getDeal(@RequestHeader("token") String token,
                                   @PathVariable Long deal_id){
         return ResponseEntity.ok().body(dealGetService.getDeal(token, deal_id));
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity getDealByMember(@RequestHeader("token") String token,
+                                          @RequestParam("pageNo") int pageNo){
+        return ResponseEntity.ok(dealGetService.getDealByMember(token, pageNo));
     }
 
     @PutMapping

@@ -21,20 +21,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class DealDeleteService {
 
     private final DealRepository dealRepository;
-    private final MemberRepository memberRepository;
+    private final DealImageUpdateService dealImageUpdateService;
     private final JwtService jwtService;
 
 
     public ResponseEntity deleteDeal(String token, Long deal_id) {
-        String email = jwtService.findEmailByJwt(token);
-
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        Member member = jwtService.findMemberByToken(token);
 
         Deal deal = dealRepository.findById(deal_id).orElseThrow(DealNotFoundException::new);
 
         checkMember(member, deal.getMember());
 
         deal.delete();
+
+        dealImageUpdateService.clearDealImage(deal);
 
         return ResponseEntity.noContent().build();
     }

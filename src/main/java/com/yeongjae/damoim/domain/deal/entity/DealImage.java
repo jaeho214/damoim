@@ -1,6 +1,7 @@
 package com.yeongjae.damoim.domain.deal.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yeongjae.damoim.global.jpa.JpaBasePersistable;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -22,6 +23,7 @@ public class DealImage extends JpaBasePersistable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deal_id", nullable = false)
+    @JsonIgnore
     private Deal deal;
 
     @Builder
