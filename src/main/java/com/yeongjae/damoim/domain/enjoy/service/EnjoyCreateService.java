@@ -1,8 +1,10 @@
 package com.yeongjae.damoim.domain.enjoy.service;
 
 import com.yeongjae.damoim.domain.enjoy.dto.EnjoyCreateDto;
+import com.yeongjae.damoim.domain.enjoy.dto.EnjoyGetDto;
 import com.yeongjae.damoim.domain.enjoy.entity.Enjoy;
 import com.yeongjae.damoim.domain.enjoy.repository.EnjoyRepository;
+import com.yeongjae.damoim.domain.member.dto.MemberGetDto;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
@@ -17,14 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class EnjoyCreateService {
 
     private final EnjoyRepository enjoyRepository;
-    private final MemberRepository memberRepository;
     private final JwtService jwtService;
 
-    public Enjoy createEnjoy(String token, EnjoyCreateDto enjoyCreateDto) {
-        String email = jwtService.findEmailByJwt(token);
+    public EnjoyGetDto createEnjoy(String token, EnjoyCreateDto enjoyCreateDto) {
+        Member member = jwtService.findMemberByToken(token);
+        Enjoy savedEnjoy = enjoyRepository.save(enjoyCreateDto.of(member));
 
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
-
-        return enjoyRepository.save(enjoyCreateDto.of(member));
+        return EnjoyGetDto.toDto(savedEnjoy, MemberGetDto.toDto(member));
     }
 }

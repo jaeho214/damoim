@@ -19,14 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EnjoyDeleteService {
     private final EnjoyRepository enjoyRepository;
-    private final MemberRepository memberRepository;
     private final JwtService jwtService;
 
     public ResponseEntity deleteEnjoy(String token, Long enjoy_id){
-        String email = jwtService.findEmailByJwt(token);
-
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
-
+        Member member = jwtService.findMemberByToken(token);
         Enjoy enjoy = enjoyRepository.findById(enjoy_id).orElseThrow(EnjoyNotFoundException::new);
 
         checkMember(member, enjoy.getMember());

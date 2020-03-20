@@ -6,5 +6,4 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EnjoyRepository extends JpaRepository<Enjoy, Long>, EnjoyRepositoryCustom {
-    Page<Enjoy> findByLocation(String location, Pageable pageable);
 }

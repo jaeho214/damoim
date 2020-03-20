@@ -1,8 +1,13 @@
 package com.yeongjae.damoim.domain.enjoy.service;
 
+import com.yeongjae.damoim.domain.enjoy.dto.EnjoyGetByLocationDto;
+import com.yeongjae.damoim.domain.enjoy.dto.EnjoyGetByMemberDto;
+import com.yeongjae.damoim.domain.enjoy.dto.EnjoyGetDto;
+import com.yeongjae.damoim.domain.enjoy.dto.EnjoyGetPagingDto;
 import com.yeongjae.damoim.domain.enjoy.entity.Enjoy;
 import com.yeongjae.damoim.domain.enjoy.exception.EnjoyNotFoundException;
 import com.yeongjae.damoim.domain.enjoy.repository.EnjoyRepository;
+import com.yeongjae.damoim.domain.member.dto.MemberGetDto;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
@@ -23,23 +28,23 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class EnjoyGetService {
+
+    private final int LIMIT = 10;
+
     private final EnjoyRepository enjoyRepository;
-    private final MemberRepository memberRepository;
     private final JwtService jwtService;
 
     @Transactional(readOnly = true)
-    public List<Enjoy> getEnjoys(String location, int pageNo){
-        Pageable pageable = PageRequest.of(pageNo, 10, Sort.Direction.DESC, "createdAt");
-        Page<Enjoy> enjoyPages = enjoyRepository.findByLocation(location, pageable);
+    public EnjoyGetPagingDto getEnjoys(String location, int pageNo){
+        Pageable pageable = PageRequest.of(--pageNo * LIMIT, 10, Sort.Direction.DESC, "createdAt");
+        Page<EnjoyGetByLocationDto> enjoyPages = enjoyRepository.findByLocation(location, pageable);
 
-        return enjoyPages.stream()
-                .collect(Collectors.toList());
+        return EnjoyGetPagingDto.locationOf(enjoyPages);
     }
 
     @Transactional(readOnly = true)
-    public Enjoy getEnjoy(String token, Long enjoy_id){
-        String email = jwtService.findEmailByJwt(token);
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+    public EnjoyGetDto getEnjoy(String token, Long enjoy_id){
+        Member member = jwtService.findMemberByToken(token);
 
         Enjoy enjoy = enjoyRepository.fetchEnjoyById(enjoy_id).orElseThrow(EnjoyNotFoundException::new);
 
@@ -47,6 +52,15 @@ public class EnjoyGetService {
             throw new BusinessLogicException(ErrorCodeType.USER_UNAUTHORIZED);
 
         enjoy.updateHits();
-        return enjoy;
+        return EnjoyGetDto.toDto(enjoy, MemberGetDto.toDto(member));
+    }
+
+    public EnjoyGetPagingDto getEnjoyByMember(String token, int pageNo){
+        Member member = jwtService.findMemberByToken(token);
+
+        Pageable pageable = PageRequest.of(--pageNo * LIMIT, 10, Sort.Direction.DESC, "createdAt");
+        Page<EnjoyGetByMemberDto> enjoyPages = enjoyRepository.findByMember(member, pageable);
+
+        return EnjoyGetPagingDto.memberOf(enjoyPages);
     }
 }
