@@ -1,5 +1,9 @@
 package com.yeongjae.damoim.domain.enjoy.service;
 
+import com.yeongjae.damoim.domain.enjoy.dto.EnjoyGetByLocationDto;
+import com.yeongjae.damoim.domain.enjoy.dto.EnjoyGetByMemberDto;
+import com.yeongjae.damoim.domain.enjoy.dto.EnjoyGetDto;
+import com.yeongjae.damoim.domain.enjoy.dto.EnjoyGetPagingDto;
 import com.yeongjae.damoim.domain.enjoy.entity.Enjoy;
 import com.yeongjae.damoim.domain.enjoy.entity.EnjoyCategory;
 import com.yeongjae.damoim.domain.enjoy.repository.EnjoyRepository;
@@ -51,32 +55,45 @@ class EnjoyGetServiceTest {
 
     private String email = "email@eamil.com";
     private String token = "token";
-    private Page<Enjoy> enjoyPage = Mockito.mock(Page.class);
+    private Page<EnjoyGetByLocationDto> enjoyGetByLocationDtoPage = Mockito.mock(Page.class);
+    private Page<EnjoyGetByMemberDto> enjoyGetByMemberDtoPage = Mockito.mock(Page.class);
 
     @Test
     void getEnjoys() {
         //given
-        given(enjoyRepository.findByLocation(anyString(), any())).willReturn(enjoyPage);
+        given(enjoyRepository.findByLocation(anyString(), any())).willReturn(enjoyGetByLocationDtoPage);
 
         //when
-        List<Enjoy> enjoyList = enjoyGetService.getEnjoys("강원도_강릉시", 1);
+        EnjoyGetPagingDto enjoyList = enjoyGetService.getEnjoys("강원도_강릉시", 1);
 
         //then
-        assertThat(enjoyList.size()).isEqualTo(enjoyList.size());
+        assertThat(enjoyList.getEnjoyGetByLocationDtoList().size()).isEqualTo(enjoyGetByLocationDtoPage.getSize());
     }
 
     @Test
     void getEnjoy() {
         //given
-        given(jwtService.findEmailByJwt(anyString())).willReturn(email);
-        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(member));
+        given(jwtService.findMemberByToken(anyString())).willReturn(member);
         given(enjoyRepository.fetchEnjoyById(anyLong())).willReturn(Optional.of(enjoy));
 
         //when
-        Enjoy savedEnjoy = enjoyGetService.getEnjoy(token, 1L);
+        EnjoyGetDto savedEnjoy = enjoyGetService.getEnjoy(token, 1L);
 
         //then
         assertThat(savedEnjoy.getTitle()).isEqualTo(enjoy.getTitle());
         assertThat(savedEnjoy.getContent()).isEqualTo(enjoy.getContent());
+    }
+
+    @Test
+    void getEnjoyByMember(){
+        //given
+        given(jwtService.findMemberByToken(anyString())).willReturn(member);
+        given(enjoyRepository.findByMember(any(Member.class), any())).willReturn(enjoyGetByMemberDtoPage);
+
+        //when
+        EnjoyGetPagingDto enjoyList = enjoyGetService.getEnjoyByMember("token", 1);
+
+        //then
+        assertThat(enjoyList.getEnjoyGetByMemberDtoList().size()).isEqualTo(enjoyGetByMemberDtoPage.getSize());
     }
 }

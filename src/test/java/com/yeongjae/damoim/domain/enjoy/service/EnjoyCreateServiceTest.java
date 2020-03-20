@@ -1,6 +1,7 @@
 package com.yeongjae.damoim.domain.enjoy.service;
 
 import com.yeongjae.damoim.domain.enjoy.dto.EnjoyCreateDto;
+import com.yeongjae.damoim.domain.enjoy.dto.EnjoyGetDto;
 import com.yeongjae.damoim.domain.enjoy.entity.Enjoy;
 import com.yeongjae.damoim.domain.enjoy.repository.EnjoyRepository;
 import com.yeongjae.damoim.domain.member.entity.Member;
@@ -41,11 +42,10 @@ class EnjoyCreateServiceTest {
         //given
         Enjoy enjoy = enjoyCreateDtoFixture.of(memberFixture);
         given(enjoyRepository.save(enjoy)).willReturn(enjoy);
-        given(jwtService.findEmailByJwt(anyString())).willReturn(email);
-        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(memberFixture));
+        given(jwtService.findMemberByToken(anyString())).willReturn(memberFixture);
 
         //when
-        Enjoy savedEnjoy = enjoyCreateService.createEnjoy(token, enjoyCreateDtoFixture);
+        EnjoyGetDto savedEnjoy = enjoyCreateService.createEnjoy(token, enjoyCreateDtoFixture);
 
         //then
         assertThat(savedEnjoy.getContent()).isEqualTo(enjoy.getContent());

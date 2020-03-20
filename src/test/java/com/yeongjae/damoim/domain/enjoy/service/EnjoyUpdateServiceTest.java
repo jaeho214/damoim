@@ -1,5 +1,6 @@
 package com.yeongjae.damoim.domain.enjoy.service;
 
+import com.yeongjae.damoim.domain.enjoy.dto.EnjoyGetDto;
 import com.yeongjae.damoim.domain.enjoy.dto.EnjoyUpdateDto;
 import com.yeongjae.damoim.domain.enjoy.entity.Enjoy;
 import com.yeongjae.damoim.domain.enjoy.entity.EnjoyCategory;
@@ -52,11 +53,10 @@ class EnjoyUpdateServiceTest {
     void updateEnjoy() {
         //given
         given(enjoyRepository.findById(anyLong())).willReturn(Optional.ofNullable(enjoy));
-        given(jwtService.findEmailByJwt(anyString())).willReturn(email);
-        given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(member));
+        given(jwtService.findMemberByToken(anyString())).willReturn(member);
 
         //when
-        Enjoy updateEnjoy = enjoyUpdateService.updateEnjoy(token, enjoyUpdateDto);
+        EnjoyGetDto updateEnjoy = enjoyUpdateService.updateEnjoy(token, enjoyUpdateDto);
 
         //then
         assertThat(updateEnjoy.getContent()).isEqualTo(enjoyUpdateDto.getContent());

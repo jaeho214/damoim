@@ -3,6 +3,8 @@ package com.yeongjae.damoim.domain.enjoy.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.yeongjae.damoim.domain.enjoy.dto.EnjoyCreateDto;
+import com.yeongjae.damoim.domain.enjoy.dto.EnjoyGetDto;
+import com.yeongjae.damoim.domain.enjoy.dto.EnjoyGetPagingDto;
 import com.yeongjae.damoim.domain.enjoy.dto.EnjoyUpdateDto;
 import com.yeongjae.damoim.domain.enjoy.entity.Enjoy;
 import com.yeongjae.damoim.domain.enjoy.service.EnjoyCreateService;
@@ -21,8 +23,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.util.Arrays;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
@@ -58,11 +58,13 @@ class EnjoyControllerTest {
     private EnjoyCreateDto enjoyCreateDtoFixture = new EasyRandom().nextObject(EnjoyCreateDto.class);
     private EnjoyUpdateDto enjoyUpdateDtoFixture = new EasyRandom().nextObject(EnjoyUpdateDto.class);
     private Enjoy enjoyFixture = new EasyRandom().nextObject(Enjoy.class);
+    private EnjoyGetDto enjoyGetDtoFixture = new EasyRandom().nextObject(EnjoyGetDto.class);
+    private EnjoyGetPagingDto enjoyGetPagingDtoFixture = new EasyRandom().nextObject(EnjoyGetPagingDto.class);
 
     @Test
     void createEnjoy() throws Exception {
         Enjoy enjoy = enjoyCreateDtoFixture.of(memberFixture);
-        given(enjoyCreateService.createEnjoy(anyString(), any(EnjoyCreateDto.class))).willReturn(enjoy);
+        given(enjoyCreateService.createEnjoy(anyString(), any(EnjoyCreateDto.class))).willReturn(enjoyGetDtoFixture);
 
         mockMvc.perform(
                 post("/damoim/enjoy")
@@ -78,7 +80,7 @@ class EnjoyControllerTest {
     @Test
     void getEnjoys() throws Exception {
         String location = "강원도_원주시";
-        given(enjoyGetService.getEnjoys(anyString(), anyInt())).willReturn(Arrays.asList(enjoyFixture));
+        given(enjoyGetService.getEnjoys(anyString(), anyInt())).willReturn(enjoyGetPagingDtoFixture);
 
         mockMvc.perform(
                 get("/damoim/enjoy/list/{location}", location)
@@ -86,14 +88,13 @@ class EnjoyControllerTest {
                 .header("token", "token")
                 .param("pageNo", String.valueOf(1))
         )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].title").value(enjoyFixture.getTitle()));
+                .andExpect(status().isOk());
     }
 
     @Test
     void getEnjoy() throws Exception {
         Long enjoy_id = 1L;
-        given(enjoyGetService.getEnjoy(anyString(),anyLong())).willReturn(enjoyFixture);
+        given(enjoyGetService.getEnjoy(anyString(),anyLong())).willReturn(enjoyGetDtoFixture);
 
         mockMvc.perform(
                 get("/damoim/enjoy/{id}", enjoy_id)
@@ -101,12 +102,26 @@ class EnjoyControllerTest {
                 .header("token", "token")
         )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value(enjoyFixture.getTitle()));
+                .andExpect(jsonPath("$.title").value(enjoyGetDtoFixture.getTitle()));
+    }
+
+    @Test
+    void getEnjoyByMember() throws Exception{
+        given(enjoyGetService.getEnjoyByMember(anyString(), anyInt())).willReturn(enjoyGetPagingDtoFixture);
+
+        mockMvc.perform(
+                get("/damoim/enjoy/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("token", "token")
+                .param("pageNo", String.valueOf(1))
+        )
+                .andExpect(status().isOk());
+
     }
 
     @Test
     void updateEnjoy() throws Exception{
-        given(enjoyUpdateService.updateEnjoy(anyString(),any(EnjoyUpdateDto.class))).willReturn(enjoyFixture);
+        given(enjoyUpdateService.updateEnjoy(anyString(),any(EnjoyUpdateDto.class))).willReturn(enjoyGetDtoFixture);
 
         mockMvc.perform(
                 put("/damoim/enjoy")

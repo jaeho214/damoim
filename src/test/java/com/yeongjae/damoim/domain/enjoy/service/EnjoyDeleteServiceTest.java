@@ -53,8 +53,7 @@ class EnjoyDeleteServiceTest {
     @Test
     void deleteEnjoy() {
         //given
-        given(jwtService.findEmailByJwt(anyString())).willReturn(email);
-        given(memberRepository.findByEmail(anyString())).willReturn(Optional.ofNullable(member));
+        given(jwtService.findMemberByToken(anyString())).willReturn(member);
         given(enjoyRepository.findById(anyLong())).willReturn(Optional.ofNullable(enjoy));
 
         //when
