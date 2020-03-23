@@ -37,9 +37,9 @@ public class BoardCreateService {
 
         if(boardCreateDto.getImagePaths() != null) {
             Board savedBoard = boardImageCreateService.saveBoardImage(boardCreateDto, board);
-            return BoardGetDto.toDto(savedBoard, MemberGetDto.toDto(member));
+            return BoardGetDto.toDto(savedBoard);
         }
         Board savedBoard = boardRepository.save(board);
-        return BoardGetDto.toDto(savedBoard, MemberGetDto.toDto(member));
+        return BoardGetDto.toDto(savedBoard);
     }
 }

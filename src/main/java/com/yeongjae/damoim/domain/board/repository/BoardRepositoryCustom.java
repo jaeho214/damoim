@@ -14,4 +14,5 @@ public interface BoardRepositoryCustom {
     Optional<Board> fetchBoardById(Long board_id);
     Page<BoardGetByLocationDto> findByLocation(String location, Pageable pageable);
     Page<BoardGetByMemberDto> findByMember(Member member, Pageable pageable);
+    Page<BoardGetByLocationDto> searchByKeyword(String keyword, String location, Pageable pageable);
 }

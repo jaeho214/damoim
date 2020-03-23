@@ -1,6 +1,7 @@
 package com.yeongjae.damoim.domain.board.entity;
 
 import com.yeongjae.damoim.domain.board.dto.BoardUpdateDto;
+import com.yeongjae.damoim.domain.like.entity.BoardLike;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.reply.entity.Reply;
 import com.yeongjae.damoim.global.jpa.JpaBasePersistable;
@@ -45,7 +46,12 @@ public class Board extends JpaBasePersistable implements Serializable {
     private Set<BoardImage> imagePaths = new HashSet<>();
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Column(name = "replies")
     private Set<Reply> replyList = new HashSet<>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Column(name = "boardLikes")
+    private List<BoardLike> boardLikeList = new ArrayList<>();
 
     @Builder
     public Board(final String title,
@@ -54,7 +60,8 @@ public class Board extends JpaBasePersistable implements Serializable {
                  final String location,
                  final Member member,
                  final Set<BoardImage> imagePaths,
-                 final Set<Reply> replyList) {
+                 final Set<Reply> replyList,
+                 final List<BoardLike> boardLikeList) {
         this.title = title;
         this.content = content;
         this.hits = hits;
@@ -62,6 +69,7 @@ public class Board extends JpaBasePersistable implements Serializable {
         this.member = member;
         this.imagePaths = imagePaths;
         this.replyList = replyList;
+        this.boardLikeList = boardLikeList;
     }
 
     public void addImage(BoardImage imagePath){

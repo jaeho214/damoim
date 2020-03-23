@@ -38,7 +38,7 @@ public class BoardUpdateService {
             boardImageUpdateService.saveBoardImage(boardUpdateDto, board);
         }
 
-        return BoardGetDto.toDto(board, MemberGetDto.toDto(member));
+        return BoardGetDto.toDto(board);
     }
 
     private void checkMember(Member member, Member writer) {

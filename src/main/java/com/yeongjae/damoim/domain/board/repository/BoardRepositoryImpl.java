@@ -1,12 +1,12 @@
 package com.yeongjae.damoim.domain.board.repository;
 
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.yeongjae.damoim.domain.board.dto.BoardGetByLocationDto;
 import com.yeongjae.damoim.domain.board.dto.BoardGetByMemberDto;
 import com.yeongjae.damoim.domain.board.entity.Board;
 import com.yeongjae.damoim.domain.board.entity.QBoard;
 import com.yeongjae.damoim.domain.board.entity.QBoardImage;
+import com.yeongjae.damoim.domain.like.entity.QBoardLike;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.entity.QMember;
 import com.yeongjae.damoim.domain.reply.entity.QReply;
@@ -31,6 +31,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
     private QBoardImage boardImage = QBoardImage.boardImage;
     private QReply reply = QReply.reply;
     private QMember member = QMember.member;
+    private QBoardLike boardLike = QBoardLike.boardLike;
 
     public BoardRepositoryImpl(){
         super(Board.class);
@@ -47,6 +48,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                 .innerJoin(this.board.member, member).fetchJoin()
                 .leftJoin(this.board.imagePaths, boardImage).fetchJoin()
                 .leftJoin(this.board.replyList, reply).fetchJoin()
+                .leftJoin(this.board.boardLikeList, boardLike)
                 .where(this.board.id.eq(board_id))
                 .fetchOne();
 
@@ -62,24 +64,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                 .innerJoin(board.member, member).fetchJoin()
                 .where(board.location.eq(location));
 
-        List<Board> boardList = getQuerydsl()
-                .applyPagination(pageable, jpaQuery)
-                .fetch();
-
-        List<BoardGetByLocationDto> boardGetByLocationDtoList = new ArrayList<>();
-        boardList.forEach(board ->
-                boardGetByLocationDtoList.add(
-                    BoardGetByLocationDto.builder()
-                        .board_id(board.getId())
-                        .createdAt(board.getCreatedAt())
-                        .hits(board.getHits())
-                        .title(board.getTitle())
-                        .writer(board.getMember().getNickName())
-                        .replyCount(board.getReplyList().size())
-                        .build()
-                ));
-
-        return new PageImpl<>(boardGetByLocationDtoList, pageable, jpaQuery.fetchCount());
+        return transferToLocationDto(pageable, jpaQuery);
     }
 
     @Override
@@ -91,9 +76,26 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                 .innerJoin(board.member, this.member)
                 .where(board.member.eq(member));
 
-        List<Board> boardList = getQuerydsl()
-                .applyPagination(pageable, jpaQuery)
-                .fetch();
+
+        return transferToMemberDto(pageable, jpaQuery);
+
+    }
+
+    @Override
+    public Page<BoardGetByLocationDto> searchByKeyword(String keyword, String location, Pageable pageable) {
+        JPAQuery<Board> jpaQuery = new JPAQuery<>(entityManager);
+
+        jpaQuery = jpaQuery.select(board)
+                .from(board)
+                .innerJoin(board.member, member).fetchJoin()
+                .where(board.title.contains(keyword))
+                .where(board.location.eq(location));
+
+        return transferToLocationDto(pageable, jpaQuery);
+    }
+
+    private Page<BoardGetByMemberDto> transferToMemberDto(Pageable pageable, JPAQuery jpaQuery){
+        List<Board> boardList = fetch(pageable, jpaQuery);
 
         List<BoardGetByMemberDto> boardGetByMemberDtoList = new ArrayList<>();
         boardList.forEach(board ->
@@ -105,9 +107,36 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                                 .createdAt(board.getCreatedAt())
                                 .location(board.getLocation())
                                 .replyCount(board.getReplyList().size())
+                                .likeCount(board.getBoardLikeList().size())
                                 .build()
                 ));
 
         return new PageImpl<>(boardGetByMemberDtoList, pageable, jpaQuery.fetchCount());
+    }
+
+    private Page<BoardGetByLocationDto> transferToLocationDto(Pageable pageable, JPAQuery jpaQuery){
+        List<Board> boardList = fetch(pageable, jpaQuery);
+
+        List<BoardGetByLocationDto> boardGetByLocationDtoList = new ArrayList<>();
+        boardList.forEach(board ->
+                boardGetByLocationDtoList.add(
+                        BoardGetByLocationDto.builder()
+                                .board_id(board.getId())
+                                .createdAt(board.getCreatedAt())
+                                .hits(board.getHits())
+                                .title(board.getTitle())
+                                .writer(board.getMember().getNickName())
+                                .replyCount(board.getReplyList().size())
+                                .likeCount(board.getBoardLikeList().size())
+                                .build()
+                ));
+
+        return new PageImpl<>(boardGetByLocationDtoList, pageable, jpaQuery.fetchCount());
+    }
+
+    private List<Board> fetch(Pageable pageable, JPAQuery jpaQuery){
+        return getQuerydsl()
+                .applyPagination(pageable, jpaQuery)
+                .fetch();
     }
 }

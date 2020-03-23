@@ -47,13 +47,13 @@ public class BoardGetService {
             throw new BusinessLogicException(ErrorCodeType.USER_UNAUTHORIZED);
 
         Pageable pageable = PageRequest.of(--pageNo * LIMIT, 10, Sort.Direction.DESC, "createdAt");
-        Page<BoardGetByLocationDto> boards = boardRepository.findByLocation(location, pageable);
+        Page<BoardGetByLocationDto> boardPage = boardRepository.findByLocation(location, pageable);
 
 
-        if(boards == null)
+        if(boardPage == null)
             throw new BoardNotFoundException();
 
-        return BoardGetPagingDto.locationOf(boards);
+        return BoardGetPagingDto.locationOf(boardPage);
     }
 
     @Transactional
@@ -68,15 +68,27 @@ public class BoardGetService {
 
         board.updateHits();
 
-        return BoardGetDto.toDto(board, MemberGetDto.toDto(member));
+        return BoardGetDto.toDto(board);
     }
 
     public BoardGetPagingDto getBoardByMember(String token, int pageNo) {
         Member member = jwtService.findMemberByToken(token);
 
         Pageable pageable = PageRequest.of(--pageNo * LIMIT, 10, Sort.Direction.DESC, "createdAt");
-        Page<BoardGetByMemberDto> boards = boardRepository.findByMember(member, pageable);
+        Page<BoardGetByMemberDto> boardPage = boardRepository.findByMember(member, pageable);
 
-        return BoardGetPagingDto.memberOf(boards);
+        return BoardGetPagingDto.memberOf(boardPage);
+    }
+
+    public BoardGetPagingDto searchByKeyword(String token, String location, String keyword, int pageNo) {
+        Member member = jwtService.findMemberByToken(token);
+
+        if(!member.getIsVerified() || !member.getLocation().equals(location))
+            throw new BusinessLogicException(ErrorCodeType.USER_UNAUTHORIZED);
+
+        Pageable pageable = PageRequest.of(--pageNo * LIMIT, 10, Sort.Direction.DESC, "createdAt");
+        Page<BoardGetByLocationDto> boardPage = boardRepository.searchByKeyword(keyword, location, pageable);
+
+        return BoardGetPagingDto.locationOf(boardPage);
     }
 }

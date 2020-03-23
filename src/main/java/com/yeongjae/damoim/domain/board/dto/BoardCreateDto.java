@@ -37,6 +37,8 @@ public class BoardCreateDto {
                 .member(member)
                 .imagePaths(new HashSet<>())
                 .hits(0L)
+                .replyList(new HashSet<>())
+                .boardLikeList(new ArrayList<>())
                 .build();
     }
 }

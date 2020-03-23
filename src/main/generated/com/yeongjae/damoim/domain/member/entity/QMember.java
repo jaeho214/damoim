@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -42,6 +43,8 @@ public class QMember extends EntityPathBase<Member> {
     public final StringPath imagePath = createString("imagePath");
 
     public final BooleanPath isVerified = createBoolean("isVerified");
+
+    public final ListPath<com.yeongjae.damoim.domain.keyword.entity.Keyword, com.yeongjae.damoim.domain.keyword.entity.QKeyword> keywords = this.<com.yeongjae.damoim.domain.keyword.entity.Keyword, com.yeongjae.damoim.domain.keyword.entity.QKeyword>createList("keywords", com.yeongjae.damoim.domain.keyword.entity.Keyword.class, com.yeongjae.damoim.domain.keyword.entity.QKeyword.class, PathInits.DIRECT2);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> lastModifiedAt = _super.lastModifiedAt;

@@ -24,6 +24,8 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final com.yeongjae.damoim.global.jpa.QJpaBasePersistable _super = new com.yeongjae.damoim.global.jpa.QJpaBasePersistable(this);
 
+    public final ListPath<com.yeongjae.damoim.domain.like.entity.BoardLike, com.yeongjae.damoim.domain.like.entity.QBoardLike> boardLikeList = this.<com.yeongjae.damoim.domain.like.entity.BoardLike, com.yeongjae.damoim.domain.like.entity.QBoardLike>createList("boardLikeList", com.yeongjae.damoim.domain.like.entity.BoardLike.class, com.yeongjae.damoim.domain.like.entity.QBoardLike.class, PathInits.DIRECT2);
+
     public final StringPath content = createString("content");
 
     //inherited
@@ -40,7 +42,7 @@ public class QBoard extends EntityPathBase<Board> {
     //inherited
     public final NumberPath<Long> id = _super.id;
 
-    public final ListPath<BoardImage, QBoardImage> imagePaths = this.<BoardImage, QBoardImage>createList("imagePaths", BoardImage.class, QBoardImage.class, PathInits.DIRECT2);
+    public final SetPath<BoardImage, QBoardImage> imagePaths = this.<BoardImage, QBoardImage>createSet("imagePaths", BoardImage.class, QBoardImage.class, PathInits.DIRECT2);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> lastModifiedAt = _super.lastModifiedAt;
@@ -52,7 +54,7 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final com.yeongjae.damoim.domain.member.entity.QMember member;
 
-    public final ListPath<com.yeongjae.damoim.domain.reply.entity.Reply, com.yeongjae.damoim.domain.reply.entity.QReply> replyList = this.<com.yeongjae.damoim.domain.reply.entity.Reply, com.yeongjae.damoim.domain.reply.entity.QReply>createList("replyList", com.yeongjae.damoim.domain.reply.entity.Reply.class, com.yeongjae.damoim.domain.reply.entity.QReply.class, PathInits.DIRECT2);
+    public final SetPath<com.yeongjae.damoim.domain.reply.entity.Reply, com.yeongjae.damoim.domain.reply.entity.QReply> replyList = this.<com.yeongjae.damoim.domain.reply.entity.Reply, com.yeongjae.damoim.domain.reply.entity.QReply>createSet("replyList", com.yeongjae.damoim.domain.reply.entity.Reply.class, com.yeongjae.damoim.domain.reply.entity.QReply.class, PathInits.DIRECT2);
 
     public final StringPath title = createString("title");
 
