@@ -7,12 +7,14 @@ import com.yeongjae.damoim.domain.board.repository.BoardRepository;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
 import com.yeongjae.damoim.global.jwt.JwtService;
+import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,7 +28,7 @@ class BoardCreateServiceTest {
     private BoardRepository boardRepository;
 
     @Mock
-    private MemberRepository memberRepository;
+    private BoardImageCreateService boardImageCreateService;
 
     @InjectMocks
     private BoardCreateService boardCreateService;
@@ -38,7 +40,10 @@ class BoardCreateServiceTest {
             .title("제목")
             .content("내용")
             .location("지역")
+            .imagePaths(new ArrayList<>())
             .build();
+
+    private Board boardFixture = new EasyRandom().nextObject(Board.class);
 
     private Member member = Member.builder()
             .email("email@gmail.com")
@@ -56,8 +61,9 @@ class BoardCreateServiceTest {
     void createBoard() {
         //given
         Board board = boardCreateDto.of(member);
-        given(boardRepository.save(board)).willReturn(board);
+        //given(boardRepository.save(board)).willReturn(board);
         given(jwtService.findMemberByToken(any(String.class))).willReturn(member);
+        given(boardImageCreateService.saveBoardImage(any(BoardCreateDto.class), any(Board.class))).willReturn(board);
 
         //when
         BoardGetDto savedBoard = boardCreateService.createBoard(token, boardCreateDto);

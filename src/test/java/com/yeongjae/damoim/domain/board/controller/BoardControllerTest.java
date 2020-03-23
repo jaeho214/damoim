@@ -95,6 +95,19 @@ class BoardControllerTest {
     }
 
     @Test
+    void searchBoardByKeyword() throws Exception{
+        given(boardGetService.searchByKeyword(anyString(),anyString(), anyString(), anyInt())).willReturn(boardGetPagingDto);
+
+        mockMvc.perform(
+                get("/damoim/board/search/{location}/{keyword}","경기도_시흥시","화장품")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("token", "token")
+                .param("pageNo", String.valueOf(1))
+        )
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void getBoardByMember() throws Exception{
         given(boardGetService.getBoardByMember(anyString(), anyInt())).willReturn(boardGetPagingDto);
 

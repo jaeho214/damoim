@@ -1,10 +1,8 @@
 package com.yeongjae.damoim.domain.board.service;
 
-import com.yeongjae.damoim.domain.board.dto.BoardUpdateDto;
 import com.yeongjae.damoim.domain.board.entity.Board;
 import com.yeongjae.damoim.domain.board.repository.BoardRepository;
 import com.yeongjae.damoim.domain.member.entity.Member;
-import com.yeongjae.damoim.domain.member.repository.MemberRepository;
 import com.yeongjae.damoim.global.jwt.JwtService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,12 +11,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)

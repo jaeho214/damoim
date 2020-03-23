@@ -50,6 +50,7 @@ class BoardGetServiceTest {
             .title("제목")
             .content("content")
             .imagePaths(new HashSet<>())
+            .boardLikeList(new ArrayList<>())
             .location("강원도_강릉시")
             .replyList(new HashSet<>())
             .hits(0L)
@@ -98,6 +99,19 @@ class BoardGetServiceTest {
         BoardGetPagingDto boardList = boardGetService.getBoardByMember("token", 1);
 
         //then
-        assertThat(boardList.getBoardGetByMemberDtoList().size()).isEqualTo(boardPage.getSize());
+        assertThat(boardList.getBoardGetByMemberDtoList().size()).isEqualTo(boardGetByMemberDtoPage.getSize());
+    }
+
+    @Test
+    void searchByKeyword(){
+        //given
+        given(jwtService.findMemberByToken(anyString())).willReturn(member);
+        given(boardRepository.searchByKeyword(anyString(),anyString(),any())).willReturn(boardGetByLocationPage);
+
+        //when
+        BoardGetPagingDto boardList = boardGetService.searchByKeyword("token", "강원도_강릉시", "키워드", 1);
+
+        //then
+        assertThat(boardList.getBoardGetByLocationDtoList().size()).isEqualTo(boardGetByLocationPage.getSize());
     }
 }
