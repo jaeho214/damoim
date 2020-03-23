@@ -27,7 +27,13 @@ public enum ErrorCodeType {
     DEAL_NOT_FOUND(400, "DEAL_001", "해당 거래 목록을 찾을 수 없습니다."),
 
     //interest
-    INTEREST_NOT_FOUND(400, "INTEREST_001","해당 즐겨찾기 기록을 찾을 수 없습니다.");
+    INTEREST_NOT_FOUND(400, "INTEREST_001","해당 즐겨찾기 기록을 찾을 수 없습니다."),
+
+    //keyword
+    KEYWORD_NOT_FOUND(400, "KEYWORD_001", "해당 키워드를 찾을 수 없습니다."),
+
+    //like
+    LIKE_NOT_FOUND(400, "LIKE_001", "해당 좋아요를 찾을 수 없습니다.");
 
 
     private int status;
