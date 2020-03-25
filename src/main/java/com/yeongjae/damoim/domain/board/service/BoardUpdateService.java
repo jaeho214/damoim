@@ -5,14 +5,12 @@ import com.yeongjae.damoim.domain.board.dto.BoardUpdateDto;
 import com.yeongjae.damoim.domain.board.entity.Board;
 import com.yeongjae.damoim.domain.board.exception.BoardNotFoundException;
 import com.yeongjae.damoim.domain.board.repository.BoardRepository;
-import com.yeongjae.damoim.domain.member.dto.MemberGetDto;
 import com.yeongjae.damoim.domain.member.entity.Member;
-import com.yeongjae.damoim.global.config.CacheKey;
+import com.yeongjae.damoim.domain.reply.dto.ReplyGetDto;
 import com.yeongjae.damoim.global.error.ErrorCodeType;
 import com.yeongjae.damoim.global.error.exception.BusinessLogicException;
 import com.yeongjae.damoim.global.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +36,7 @@ public class BoardUpdateService {
             boardImageUpdateService.saveBoardImage(boardUpdateDto, board);
         }
 
-        return BoardGetDto.toDto(board);
+        return BoardGetDto.toDto(board, ReplyGetDto.toDtoSet(board.getReplyList()));
     }
 
     private void checkMember(Member member, Member writer) {

@@ -7,26 +7,18 @@ import com.yeongjae.damoim.domain.board.dto.BoardGetPagingDto;
 import com.yeongjae.damoim.domain.board.entity.Board;
 import com.yeongjae.damoim.domain.board.exception.BoardNotFoundException;
 import com.yeongjae.damoim.domain.board.repository.BoardRepository;
-import com.yeongjae.damoim.domain.member.dto.MemberGetDto;
 import com.yeongjae.damoim.domain.member.entity.Member;
-import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
-import com.yeongjae.damoim.domain.member.repository.MemberRepository;
-import com.yeongjae.damoim.global.config.CacheKey;
+import com.yeongjae.damoim.domain.reply.dto.ReplyGetDto;
 import com.yeongjae.damoim.global.error.ErrorCodeType;
 import com.yeongjae.damoim.global.error.exception.BusinessLogicException;
 import com.yeongjae.damoim.global.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -68,7 +60,7 @@ public class BoardGetService {
 
         board.updateHits();
 
-        return BoardGetDto.toDto(board);
+        return BoardGetDto.toDto(board, ReplyGetDto.toDtoSet(board.getReplyList()));
     }
 
     public BoardGetPagingDto getBoardByMember(String token, int pageNo) {
@@ -91,4 +83,5 @@ public class BoardGetService {
 
         return BoardGetPagingDto.locationOf(boardPage);
     }
+
 }

@@ -2,6 +2,7 @@ package com.yeongjae.damoim.domain.board.dto;
 
 import com.yeongjae.damoim.domain.board.entity.Board;
 import com.yeongjae.damoim.domain.board.entity.BoardImage;
+import com.yeongjae.damoim.domain.reply.dto.ReplyGetDto;
 import com.yeongjae.damoim.domain.reply.entity.Reply;
 import lombok.*;
 
@@ -20,12 +21,12 @@ public class BoardGetDto {
     private String location;
     private String writer;
     private Set<BoardImage> imagePaths = new HashSet<>();
-    private Set<Reply> replyList = new HashSet<>();
+    private Set<ReplyGetDto> replyList = new HashSet<>();
     private Integer likeCount;
 
     @Builder
     public BoardGetDto(Long id, LocalDateTime createdAt, String title, String content, Long hits, String location,
-                       String writer, Set<BoardImage> imagePaths, Set<Reply> replyList, Integer likeCount) {
+                       String writer, Set<BoardImage> imagePaths, Set<ReplyGetDto> replyList, Integer likeCount) {
         this.id = id;
         this.createdAt = createdAt;
         this.title = title;
@@ -38,7 +39,7 @@ public class BoardGetDto {
         this.likeCount = likeCount;
     }
 
-    public static BoardGetDto toDto(Board board){
+    public static BoardGetDto toDto(Board board, Set<ReplyGetDto> replyGetDtoSet){
         return BoardGetDto.builder()
                 .id(board.getId())
                 .content(board.getContent())
@@ -48,7 +49,7 @@ public class BoardGetDto {
                 .location(board.getLocation())
                 .writer(board.getMember().getNickName())
                 .imagePaths(board.getImagePaths())
-                .replyList(board.getReplyList())
+                .replyList(replyGetDtoSet)
                 .likeCount(board.getBoardLikeList().size())
                 .build();
     }
