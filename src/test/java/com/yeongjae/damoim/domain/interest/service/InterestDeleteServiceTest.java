@@ -31,8 +31,7 @@ class InterestDeleteServiceTest {
     private JwtService jwtService;
     @Mock
     private DealRepository dealRepository;
-    @Mock
-    private MemberRepository memberRepository;
+
     @Mock
     private InterestRepository interestRepository;
 
@@ -45,8 +44,7 @@ class InterestDeleteServiceTest {
     @Test
     void deleteInterest() {
         //given
-        given(jwtService.findEmailByJwt(anyString())).willReturn(email);
-        given(memberRepository.findByEmail(anyString())).willReturn(Optional.ofNullable(memberFixture));
+        given(jwtService.findMemberByToken(anyString())).willReturn(memberFixture);
         given(dealRepository.findById(anyLong())).willReturn(Optional.ofNullable(dealFixture));
         given(interestRepository.findByMember_IdAndDeal_id(anyLong(), anyLong())).willReturn(Optional.ofNullable(interestFixture));
 

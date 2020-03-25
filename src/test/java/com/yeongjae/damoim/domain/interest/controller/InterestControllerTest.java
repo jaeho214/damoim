@@ -1,5 +1,6 @@
 package com.yeongjae.damoim.domain.interest.controller;
 
+import com.yeongjae.damoim.domain.interest.dto.InterestGetDto;
 import com.yeongjae.damoim.domain.interest.entity.Interest;
 import com.yeongjae.damoim.domain.interest.service.InterestCreateService;
 import com.yeongjae.damoim.domain.interest.service.InterestDeleteService;
@@ -33,7 +34,7 @@ class InterestControllerTest {
     @Mock
     private InterestDeleteService interestDeleteService;
 
-    private Interest interestFixture = new EasyRandom().nextObject(Interest.class);
+    private InterestGetDto interestGetDtoFixture = new EasyRandom().nextObject(InterestGetDto.class);
     private MockMvc mockMvc;
 
     @BeforeEach
@@ -45,7 +46,7 @@ class InterestControllerTest {
     @Test
     void createInterest() throws Exception {
         Long deal_id = 1L;
-        given(interestCreateService.createInterest(anyString(), anyLong())).willReturn(interestFixture);
+        given(interestCreateService.createInterest(anyString(), anyLong())).willReturn(interestGetDtoFixture);
 
         mockMvc.perform(
                 post("/damoim/interest/{id}", deal_id)

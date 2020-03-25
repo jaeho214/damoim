@@ -2,6 +2,7 @@ package com.yeongjae.damoim.domain.interest.service;
 
 import com.yeongjae.damoim.domain.deal.entity.Deal;
 import com.yeongjae.damoim.domain.deal.repository.DealRepository;
+import com.yeongjae.damoim.domain.interest.dto.InterestGetDto;
 import com.yeongjae.damoim.domain.interest.entity.Interest;
 import com.yeongjae.damoim.domain.interest.repository.InterestRepository;
 import com.yeongjae.damoim.domain.member.entity.Member;
@@ -42,15 +43,14 @@ class InterestCreateServiceTest {
     @Test
     void createInterest() {
         //given
-        given(jwtService.findEmailByJwt(anyString())).willReturn(email);
-        given(memberRepository.findByEmail(anyString())).willReturn(Optional.ofNullable(memberFixture));
+        given(jwtService.findMemberByToken(anyString())).willReturn(memberFixture);
         given(dealRepository.findById(anyLong())).willReturn(Optional.ofNullable(dealFixture));
         given(interestRepository.save(any(Interest.class))).willReturn(interestFixture);
 
         //when
-        Interest savedInterest = interestCreateService.createInterest("token", 1L);
+        InterestGetDto savedInterest = interestCreateService.createInterest("token", 1L);
 
         //then
-        assertThat(savedInterest.getMember().getEmail()).isEqualTo(memberFixture.getEmail());
+        assertThat(savedInterest.getMember()).isEqualTo(memberFixture.getNickName());
     }
 }
