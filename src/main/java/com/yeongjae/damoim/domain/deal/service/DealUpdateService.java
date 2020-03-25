@@ -42,7 +42,7 @@ public class DealUpdateService {
         if(dealUpdateDto.getImagePaths() != null) {
             dealImageUpdateService.saveDealImage(dealUpdateDto, deal);
         }
-        return DealGetDto.toDto(deal, MemberGetDto.toDto(member));
+        return DealGetDto.toDto(deal);
     }
 
     private void checkMember(Member updater, Member writer) {

@@ -14,14 +14,22 @@ public class DealGetByLocationDto {
     private String writer;
     private LocalDateTime createdAt;
     private DealStatus dealStatus;
+    private Integer interestCount;
 
     @Builder
-    public DealGetByLocationDto(Long deal_id, String title, Long hits, String writer, LocalDateTime createdAt, DealStatus dealStatus) {
+    public DealGetByLocationDto(Long deal_id,
+                                String title,
+                                Long hits,
+                                String writer,
+                                LocalDateTime createdAt,
+                                DealStatus dealStatus,
+                                Integer interestCount) {
         this.deal_id = deal_id;
         this.title = title;
         this.hits = hits;
         this.writer = writer;
         this.createdAt = createdAt;
         this.dealStatus = dealStatus;
+        this.interestCount = interestCount;
     }
 }

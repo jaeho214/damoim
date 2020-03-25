@@ -1,6 +1,8 @@
 package com.yeongjae.damoim.domain.deal.entity;
 
 import com.yeongjae.damoim.domain.deal.dto.DealUpdateDto;
+import com.yeongjae.damoim.domain.interest.entity.Interest;
+import com.yeongjae.damoim.domain.like.entity.BoardLike;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.global.jpa.JpaBasePersistable;
 import lombok.*;
@@ -52,6 +54,10 @@ public class Deal extends JpaBasePersistable implements Serializable {
     @Column(name = "image_paths")
     private List<DealImage> imagePaths = new ArrayList<>();
 
+    @OneToMany(mappedBy = "deal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Column(name = "interests")
+    private List<Interest> interestList = new ArrayList<>();
+
     @Builder
     public Deal(final String title,
                 final String content,
@@ -61,7 +67,8 @@ public class Deal extends JpaBasePersistable implements Serializable {
                 final String price,
                 final DealStatus status,
                 final Member member,
-                final List<DealImage> imagePaths) {
+                final List<DealImage> imagePaths,
+                final List<Interest> interests) {
         this.title = title;
         this.content = content;
         this.hits = hits;
@@ -71,6 +78,7 @@ public class Deal extends JpaBasePersistable implements Serializable {
         this.status = status;
         this.member = member;
         this.imagePaths = imagePaths;
+        this.interestList = interests;
     }
 
     public void updateDeal(DealUpdateDto dealUpdateDto){

@@ -47,6 +47,7 @@ public class DealCreateDto {
                 .member(member)
                 .imagePaths(new ArrayList<>())
                 .status(DealStatus.SELLING)
+                .interests(new ArrayList<>())
                 .build();
     }
 

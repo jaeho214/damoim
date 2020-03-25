@@ -5,6 +5,7 @@ import com.yeongjae.damoim.domain.deal.dto.DealGetByMemberDto;
 import com.yeongjae.damoim.domain.deal.dto.DealGetDto;
 import com.yeongjae.damoim.domain.deal.dto.DealGetPagingDto;
 import com.yeongjae.damoim.domain.deal.entity.Deal;
+import com.yeongjae.damoim.domain.deal.entity.DealCategory;
 import com.yeongjae.damoim.domain.deal.exception.DealNotFoundException;
 import com.yeongjae.damoim.domain.deal.repository.DealRepository;
 import com.yeongjae.damoim.domain.member.dto.MemberGetDto;
@@ -55,7 +56,7 @@ public class DealGetService {
             throw new BusinessLogicException(ErrorCodeType.USER_UNAUTHORIZED);
 
         deal.updateHits();
-        return DealGetDto.toDto(deal, MemberGetDto.toDto(member));
+        return DealGetDto.toDto(deal);
     }
 
     @Transactional(readOnly = true)
@@ -66,5 +67,20 @@ public class DealGetService {
         Page<DealGetByMemberDto> dealPage = dealRepository.findByMember(member, pageable);
 
         return DealGetPagingDto.memberOf(dealPage);
+    }
+
+    public DealGetPagingDto getDealByCategory(String location, String category, int pageNo) {
+
+        Pageable pageable = PageRequest.of(--pageNo * LIMIT, 10, Sort.Direction.DESC, "createdAt");
+        Page<DealGetByLocationDto> dealPage = dealRepository.findByCategory(DealCategory.fromString(category), location, pageable);
+
+        return DealGetPagingDto.locationOf(dealPage);
+    }
+
+    public DealGetPagingDto searchByKeyword(String location, String keyword, int pageNo){
+        Pageable pageable = PageRequest.of(--pageNo * LIMIT, 10, Sort.Direction.DESC, "createdAt");
+        Page<DealGetByLocationDto> dealPage = dealRepository.searchByKeyword(keyword, location, pageable);
+
+        return DealGetPagingDto.locationOf(dealPage);
     }
 }

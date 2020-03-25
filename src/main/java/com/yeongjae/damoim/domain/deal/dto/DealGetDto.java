@@ -23,11 +23,14 @@ public class DealGetDto {
     private DealCategory category;
     private String price;
     private DealStatus status;
-    private MemberGetDto member;
+    private String writer;
     private List<DealImage> imagePaths = new ArrayList<>();
+    private Integer interestCount;
 
     @Builder
-    public DealGetDto(Long id, LocalDateTime createdAt, String title, String content, Long hits, DealCategory category, String price, DealStatus status, MemberGetDto member, List<DealImage> imagePaths) {
+    public DealGetDto(Long id, LocalDateTime createdAt, String title, String content, Long hits,
+                      DealCategory category, String price, DealStatus status, String writer,
+                      List<DealImage> imagePaths, Integer interestCount) {
         this.id = id;
         this.createdAt = createdAt;
         this.title = title;
@@ -36,11 +39,12 @@ public class DealGetDto {
         this.category = category;
         this.price = price;
         this.status = status;
-        this.member = member;
+        this.writer = writer;
         this.imagePaths = imagePaths;
+        this.interestCount = interestCount;
     }
 
-    public static DealGetDto toDto(Deal deal, MemberGetDto memberGetDto){
+    public static DealGetDto toDto(Deal deal){
         return DealGetDto.builder()
                 .id(deal.getId())
                 .createdAt(deal.getCreatedAt())
@@ -50,8 +54,9 @@ public class DealGetDto {
                 .category(deal.getCategory())
                 .price(deal.getPrice())
                 .status(deal.getStatus())
-                .member(memberGetDto)
+                .writer(deal.getMember().getNickName())
                 .imagePaths(deal.getImagePaths())
+                .interestCount(deal.getInterestList().size())
                 .build();
     }
 }
