@@ -1,5 +1,6 @@
 package com.yeongjae.damoim.domain.member.entity;
 
+import com.yeongjae.damoim.domain.keyword.entity.Keyword;
 import com.yeongjae.damoim.domain.member.dto.MemberUpdateDto;
 import com.yeongjae.damoim.global.jpa.JpaBasePersistable;
 import lombok.*;
@@ -7,11 +8,11 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter @Setter
@@ -50,6 +51,10 @@ public class Member extends JpaBasePersistable implements Serializable {
     @Column(name = "provider", length = 100)
     private String provider;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Column(name = "keywords")
+    private List<Keyword> keywords = new ArrayList<>();
+
     @Builder
     public Member(final String email,
                   final String nickName,
@@ -61,7 +66,8 @@ public class Member extends JpaBasePersistable implements Serializable {
                   final String birth,
                   final Boolean isVerified,
                   final String role,
-                  final String provider) {
+                  final String provider,
+                  final List<Keyword> keywords) {
         this.email = email;
         this.nickName = nickName;
         this.password = password;
@@ -73,6 +79,7 @@ public class Member extends JpaBasePersistable implements Serializable {
         this.isVerified = isVerified;
         this.role = role;
         this.provider = provider;
+        this.keywords = keywords;
     }
 
     public void updateMember(MemberUpdateDto memberUpdateDto){
@@ -81,6 +88,14 @@ public class Member extends JpaBasePersistable implements Serializable {
         this.isVerified = memberUpdateDto.getIsVerified();
         this.phone = memberUpdateDto.getPhone();
         this.imagePath = memberUpdateDto.getImagePath();
+    }
+
+    public void addKeyword(Keyword keyword){
+        this.keywords.add(keyword);
+    }
+
+    public void removeKeyword(Keyword keyword){
+
     }
 
     public void updateToken(String token){
