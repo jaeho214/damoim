@@ -3,6 +3,7 @@ package com.yeongjae.damoim.domain.reply.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.yeongjae.damoim.domain.reply.dto.ReplyCreateDto;
+import com.yeongjae.damoim.domain.reply.dto.ReplyGetDto;
 import com.yeongjae.damoim.domain.reply.dto.ReplyUpdateDto;
 import com.yeongjae.damoim.domain.reply.entity.Reply;
 import com.yeongjae.damoim.domain.reply.service.ReplyCreateService;
@@ -49,13 +50,14 @@ class ReplyControllerTest {
     }
 
     private Reply replyFixture = new EasyRandom().nextObject(Reply.class);
+    private ReplyGetDto replyGetDtoFixture = new EasyRandom().nextObject(ReplyGetDto.class);
     private ReplyCreateDto replyCreateDtoFixture = new EasyRandom().nextObject(ReplyCreateDto.class);
     private ReplyUpdateDto replyUpdateDtoFixture = new EasyRandom().nextObject(ReplyUpdateDto.class);
 
 
     @Test
     void createReply() throws Exception {
-        given(replyCreateService.createReply(anyString(), any(ReplyCreateDto.class))).willReturn(replyFixture);
+        given(replyCreateService.createReply(anyString(), any(ReplyCreateDto.class))).willReturn(replyGetDtoFixture);
 
         mockMvc.perform(
                 post("/damoim/reply")
@@ -70,7 +72,7 @@ class ReplyControllerTest {
 
     @Test
     void updateReply() throws Exception {
-        given(replyUpdateService.updateReply(anyString(),any(ReplyUpdateDto.class))).willReturn(replyFixture);
+        given(replyUpdateService.updateReply(anyString(),any(ReplyUpdateDto.class))).willReturn(replyGetDtoFixture);
 
         mockMvc.perform(
                 put("/damoim/reply")

@@ -3,6 +3,7 @@ package com.yeongjae.damoim.domain.reply.service;
 import com.yeongjae.damoim.domain.board.entity.Board;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
+import com.yeongjae.damoim.domain.reply.dto.ReplyGetDto;
 import com.yeongjae.damoim.domain.reply.dto.ReplyUpdateDto;
 import com.yeongjae.damoim.domain.reply.entity.Reply;
 import com.yeongjae.damoim.domain.reply.repository.ReplyRepository;
@@ -46,12 +47,11 @@ class ReplyUpdateServiceTest {
     @Test
     void updateReply() {
         //given
-        given(jwtService.findEmailByJwt(anyString())).willReturn(email);
-        given(memberRepository.findByEmail(anyString())).willReturn(Optional.ofNullable(memberFixture));
+        given(jwtService.findMemberByToken(anyString())).willReturn(memberFixture);
         given(replyRepository.findById(anyLong())).willReturn(Optional.ofNullable(replyFixture));
 
         //when
-        Reply updateReply = replyUpdateService.updateReply("token", replyUpdateDtoFixture);
+        ReplyGetDto updateReply = replyUpdateService.updateReply("token", replyUpdateDtoFixture);
 
         //then
         assertThat(updateReply.getContent()).isEqualTo(replyFixture.getContent());

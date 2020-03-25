@@ -45,8 +45,7 @@ class ReplyDeleteServiceTest {
     @Test
     void deleteReply() {
         //given
-        given(jwtService.findEmailByJwt(anyString())).willReturn(email);
-        given(memberRepository.findByEmail(anyString())).willReturn(Optional.ofNullable(memberFixture));
+        given(jwtService.findMemberByToken(anyString())).willReturn(memberFixture);
         given(replyRepository.findById(anyLong())).willReturn(Optional.ofNullable(replyFixture));
 
         //when

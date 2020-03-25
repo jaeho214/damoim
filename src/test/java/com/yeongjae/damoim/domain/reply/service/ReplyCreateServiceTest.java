@@ -5,9 +5,11 @@ import com.yeongjae.damoim.domain.board.repository.BoardRepository;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
 import com.yeongjae.damoim.domain.reply.dto.ReplyCreateDto;
+import com.yeongjae.damoim.domain.reply.dto.ReplyGetDto;
 import com.yeongjae.damoim.domain.reply.entity.Reply;
 import com.yeongjae.damoim.domain.reply.repository.ReplyRepository;
 import com.yeongjae.damoim.global.jwt.JwtService;
+import com.yeongjae.damoim.global.notification.service.NotificationService;
 import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +36,8 @@ class ReplyCreateServiceTest {
     private BoardRepository boardRepository;
     @Mock
     private ReplyRepository replyRepository;
-
+    @Mock
+    private NotificationService notificationService;
 
     private String email = "eamil@email.com";
     private Member memberFixture = new EasyRandom().nextObject(Member.class);
@@ -45,17 +48,15 @@ class ReplyCreateServiceTest {
     @Test
     void createReply() {
         //given
-        given(jwtService.findEmailByJwt(anyString())).willReturn(email);
-        given(memberRepository.findByEmail(anyString())).willReturn(Optional.ofNullable(memberFixture));
+        given(jwtService.findMemberByToken(anyString())).willReturn(memberFixture);
         given(boardRepository.findById(anyLong())).willReturn(Optional.ofNullable(boardFixture));
         given(replyRepository.save(any(Reply.class))).willReturn(replyFixture);
 
         //when
-        Reply savedReply = replyCreateService.createReply("token", replyCreateDtoFixture);
+        ReplyGetDto savedReply = replyCreateService.createReply("token", replyCreateDtoFixture);
 
         //then
-        assertThat(savedReply.getMember().getEmail()).isEqualTo(replyFixture.getMember().getEmail());
-        assertThat(savedReply.getBoard().getId()).isEqualTo(replyFixture.getBoard().getId());
+        assertThat(savedReply.getContent()).isEqualTo(replyFixture.getContent());
 
     }
 }

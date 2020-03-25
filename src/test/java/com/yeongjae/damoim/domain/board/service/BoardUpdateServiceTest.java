@@ -45,6 +45,7 @@ class BoardUpdateServiceTest {
             .content("내용")
             .title("제목")
             .imagePaths(new HashSet<>())
+            .replyList(new HashSet<>())
             .boardLikeList(new ArrayList<>())
             .member(member)
             .build();
