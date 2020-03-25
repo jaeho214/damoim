@@ -20,13 +20,10 @@ public class InterestDeleteService {
 
     private final InterestRepository interestRepository;
     private final DealRepository dealRepository;
-    private final MemberRepository memberRepository;
     private final JwtService jwtService;
 
     public ResponseEntity deleteInterest(String token, Long deal_id) {
-        String email = jwtService.findEmailByJwt(token);
-
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        Member member = jwtService.findMemberByToken(token);
 
         Deal deal = dealRepository.findById(deal_id).orElseThrow(DealNotFoundException::new);
 

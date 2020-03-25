@@ -1,5 +1,6 @@
 package com.yeongjae.damoim.domain.interest.controller;
 
+import com.yeongjae.damoim.domain.interest.dto.InterestGetDto;
 import com.yeongjae.damoim.domain.interest.entity.Interest;
 import com.yeongjae.damoim.domain.interest.service.InterestCreateService;
 import com.yeongjae.damoim.domain.interest.service.InterestDeleteService;
@@ -19,8 +20,8 @@ public class InterestController {
     @PostMapping("/{deal_id}")
     public ResponseEntity createInterest(@RequestHeader("token") String token,
                                          @PathVariable Long deal_id){
-        Interest savedInterest = interestCreateService.createInterest(token, deal_id);
-        return ResponseEntity.created(URI.create("/damoim/interest/" + savedInterest.getInterest_id())).body(savedInterest);
+        InterestGetDto savedInterest = interestCreateService.createInterest(token, deal_id);
+        return ResponseEntity.created(URI.create("/damoim/interest/" + savedInterest.getId())).body(savedInterest);
     }
 
     @DeleteMapping("/{deal_id}")

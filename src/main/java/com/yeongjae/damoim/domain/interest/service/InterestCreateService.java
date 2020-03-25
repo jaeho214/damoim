@@ -3,11 +3,10 @@ package com.yeongjae.damoim.domain.interest.service;
 import com.yeongjae.damoim.domain.deal.entity.Deal;
 import com.yeongjae.damoim.domain.deal.exception.DealNotFoundException;
 import com.yeongjae.damoim.domain.deal.repository.DealRepository;
+import com.yeongjae.damoim.domain.interest.dto.InterestGetDto;
 import com.yeongjae.damoim.domain.interest.entity.Interest;
 import com.yeongjae.damoim.domain.interest.repository.InterestRepository;
 import com.yeongjae.damoim.domain.member.entity.Member;
-import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
-import com.yeongjae.damoim.domain.member.repository.MemberRepository;
 import com.yeongjae.damoim.global.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,19 +19,18 @@ public class InterestCreateService {
 
     private final InterestRepository interestRepository;
     private final DealRepository dealRepository;
-    private final MemberRepository memberRepository;
     private final JwtService jwtService;
 
-    public Interest createInterest(String token, Long deal_id) {
-        String email = jwtService.findEmailByJwt(token);
-
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
-
+    public InterestGetDto createInterest(String token, Long deal_id) {
+        Member member = jwtService.findMemberByToken(token);
         Deal deal = dealRepository.findById(deal_id).orElseThrow(DealNotFoundException::new);
 
-        return interestRepository.save(Interest.builder()
-                .member(member)
-                .deal(deal)
-                .build());
+        Interest savedInterest =
+                interestRepository.save(Interest.builder()
+                                        .member(member)
+                                        .deal(deal)
+                                        .build());
+
+        return InterestGetDto.toDto(savedInterest.getInterest_id(), member, deal);
     }
 }
