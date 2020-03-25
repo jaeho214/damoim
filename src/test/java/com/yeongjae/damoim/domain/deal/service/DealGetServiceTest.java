@@ -6,6 +6,7 @@ import com.yeongjae.damoim.domain.deal.dto.DealGetByMemberDto;
 import com.yeongjae.damoim.domain.deal.dto.DealGetDto;
 import com.yeongjae.damoim.domain.deal.dto.DealGetPagingDto;
 import com.yeongjae.damoim.domain.deal.entity.Deal;
+import com.yeongjae.damoim.domain.deal.entity.DealStatus;
 import com.yeongjae.damoim.domain.deal.repository.DealRepository;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
@@ -18,6 +19,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,6 +52,7 @@ class DealGetServiceTest {
             .title("title")
             .content("content")
             .location("서울특별시_성북구")
+            .interests(new ArrayList<>())
             .member(memberFixture)
             .hits(0L)
             .build();
@@ -78,7 +81,7 @@ class DealGetServiceTest {
         //then
         assertThat(deal.getContent()).isEqualTo(dealFixture.getContent());
         assertThat(deal.getPrice()).isEqualTo(dealFixture.getPrice());
-        assertThat(deal.getMember()).isNotNull();
+        assertThat(deal.getWriter()).isEqualTo(dealFixture.getMember().getNickName());
     }
 
     @Test
@@ -93,5 +96,29 @@ class DealGetServiceTest {
 
         //then
         assertThat(deal.getDealGetByMemberDtos().size()).isEqualTo(dealGetByMemberDtoPage.getSize());
+    }
+
+    @Test
+    void getDealByCategory(){
+        //given
+        given(dealRepository.findByCategory(any(), anyString(), any())).willReturn(dealGetByLocationDtoPage);
+
+        //when
+        DealGetPagingDto deal = dealGetService.getDealByCategory("경기도_시흥시", "유아용품", 1);
+
+        //then
+        assertThat(deal.getDealGetByLocationDtos().size()).isEqualTo(dealGetByMemberDtoPage.getSize());
+    }
+
+    @Test
+    void searchDealByKeyword(){
+        //given
+        given(dealRepository.searchByKeyword(anyString(), anyString(), any())).willReturn(dealGetByLocationDtoPage);
+
+        //when
+        DealGetPagingDto deal = dealGetService.searchByKeyword("경기도_시흥시", "키워드", 1);
+
+        //then
+        assertThat(deal.getDealGetByLocationDtos().size()).isEqualTo(dealGetByLocationDtoPage.getSize());
     }
 }

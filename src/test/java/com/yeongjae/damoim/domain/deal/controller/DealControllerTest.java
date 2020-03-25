@@ -128,6 +128,31 @@ class DealControllerTest {
     }
 
     @Test
+    void getDealByCategory() throws Exception{
+        given(dealGetService.getDealByCategory(anyString(), anyString(), anyInt())).willReturn(dealGetPagingDtoFixture);
+
+        mockMvc.perform(
+                get("/damoim/deal/category/{location}/{category}", "경기도_시흥시", "유아용품")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("pageNo", String.valueOf(1))
+        )
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void searchDealByKeyword() throws Exception{
+        given(dealGetService.searchByKeyword(anyString(), anyString(), anyInt())).willReturn(dealGetPagingDtoFixture);
+
+        mockMvc.perform(
+                get("/damoim/deal/search/{location}/{keyword}", "경기도_시흥시", "유아용품")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("pageNo", String.valueOf(1))
+        )
+                .andExpect(status().isOk());
+    }
+
+
+    @Test
     void updateDeal() throws Exception {
         given(dealUpdateService.updateDeal(anyString(), any(DealUpdateDto.class))).willReturn(dealGetDtoFixture);
 

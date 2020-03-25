@@ -5,6 +5,7 @@ import com.yeongjae.damoim.domain.deal.dto.DealGetDto;
 import com.yeongjae.damoim.domain.deal.entity.Deal;
 import com.yeongjae.damoim.domain.deal.entity.DealImage;
 import com.yeongjae.damoim.domain.deal.repository.DealRepository;
+import com.yeongjae.damoim.domain.keyword.repository.KeywordRepository;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
 import com.yeongjae.damoim.global.jwt.JwtService;
@@ -33,6 +34,8 @@ class DealCreateServiceTest {
     @Mock
     private DealRepository dealRepository;
     @Mock
+    private KeywordRepository keywordRepository;
+    @Mock
     private DealImageCreateService dealImageCreateService;
     @InjectMocks
     private DealCreateService dealCreateService;
@@ -41,6 +44,8 @@ class DealCreateServiceTest {
     private DealImage dealImageFixture = new EasyRandom().nextObject(DealImage.class);
     private List<DealImage> dealImages = new ArrayList<>(Arrays.asList(dealImageFixture));
     private Member memberFixture = new EasyRandom().nextObject(Member.class);
+    private List<String> keywordListFixture = new ArrayList<>();
+    private List<String> tokenList = new ArrayList<>();
     private String token = "token";
 
     @Test
@@ -49,6 +54,8 @@ class DealCreateServiceTest {
         Deal deal = dealCreateDtoFixture.of(memberFixture);
         given(jwtService.findMemberByToken(anyString())).willReturn(memberFixture);
         given(dealImageCreateService.saveDealImage(any(DealCreateDto.class), any(Deal.class))).willReturn(deal);
+        given(keywordRepository.findDistinctKeywordAll()).willReturn(keywordListFixture);
+        //given(keywordRepository.findAllMemberByKeyword(anyString())).willReturn(tokenList);
         //given(dealRepository.save(any(Deal.class))).willReturn(deal);
 
         //when

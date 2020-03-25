@@ -56,6 +56,7 @@ class DealUpdateServiceTest {
             .content("content")
             .location("서울특별시_성북구")
             .member(memberFixture)
+            .interests(new ArrayList<>())
             .imagePaths(new ArrayList<>())
             .hits(0L)
             .build();
