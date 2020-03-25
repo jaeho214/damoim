@@ -94,4 +94,8 @@ cloud:
     credentials:
       instanceProfile: true
 
+fcm:
+  url : https://fcm.googleapis.com/fcm/send
+  server : AAAA0pJJ-cM:APA91bELkK5mVkopafqpUBTC_tA2QkoJ-LTcYZVDT5mej5WhodjgywMtEF3YU9NO7Bhk3tD47CXWcYtojz86mCt023hpD37JTqeWoMRuW-NcQP9SpNmeBVp683xeBxJJzyEuRkj-hLI4
+
 
