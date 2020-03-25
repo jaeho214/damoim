@@ -44,6 +44,8 @@ public class QDeal extends EntityPathBase<Deal> {
 
     public final ListPath<DealImage, QDealImage> imagePaths = this.<DealImage, QDealImage>createList("imagePaths", DealImage.class, QDealImage.class, PathInits.DIRECT2);
 
+    public final ListPath<com.yeongjae.damoim.domain.interest.entity.Interest, com.yeongjae.damoim.domain.interest.entity.QInterest> interestList = this.<com.yeongjae.damoim.domain.interest.entity.Interest, com.yeongjae.damoim.domain.interest.entity.QInterest>createList("interestList", com.yeongjae.damoim.domain.interest.entity.Interest.class, com.yeongjae.damoim.domain.interest.entity.QInterest.class, PathInits.DIRECT2);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> lastModifiedAt = _super.lastModifiedAt;
 
