@@ -1,6 +1,7 @@
 package com.yeongjae.damoim.domain.reply.controller;
 
 import com.yeongjae.damoim.domain.reply.dto.ReplyCreateDto;
+import com.yeongjae.damoim.domain.reply.dto.ReplyGetDto;
 import com.yeongjae.damoim.domain.reply.dto.ReplyUpdateDto;
 import com.yeongjae.damoim.domain.reply.entity.Reply;
 import com.yeongjae.damoim.domain.reply.service.ReplyCreateService;
@@ -24,7 +25,7 @@ public class ReplyController {
     @PostMapping
     public ResponseEntity createReply(@RequestHeader("token") String token,
                                       @RequestBody ReplyCreateDto replyCreateDto){
-        Reply savedReply = replyCreateService.createReply(token, replyCreateDto);
+        ReplyGetDto savedReply = replyCreateService.createReply(token, replyCreateDto);
         return ResponseEntity.created(URI.create("/damoim/reply/"+savedReply.getId())).body(savedReply);
     }
 

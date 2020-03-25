@@ -12,21 +12,19 @@ import com.yeongjae.damoim.global.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ReplyDeleteService {
 
     private final ReplyRepository replyRepository;
-    private final MemberRepository memberRepository;
     private final JwtService jwtService;
 
 
     public ResponseEntity deleteReply(String token, Long reply_id){
-        String email = jwtService.findEmailByJwt(token);
-
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
-
+        Member member = jwtService.findMemberByToken(token);
         Reply reply = replyRepository.findById(reply_id).orElseThrow(ReplyNotFoundException::new);
 
         checkMember(member, reply.getMember());

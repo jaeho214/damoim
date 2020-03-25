@@ -3,6 +3,7 @@ package com.yeongjae.damoim.domain.reply.service;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
+import com.yeongjae.damoim.domain.reply.dto.ReplyGetDto;
 import com.yeongjae.damoim.domain.reply.dto.ReplyUpdateDto;
 import com.yeongjae.damoim.domain.reply.entity.Reply;
 import com.yeongjae.damoim.domain.reply.exception.ReplyNotFoundException;
@@ -20,20 +21,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReplyUpdateService {
 
     private final ReplyRepository replyRepository;
-    private final MemberRepository memberRepository;
     private final JwtService jwtService;
 
 
-    public Reply updateReply(String token, ReplyUpdateDto replyUpdateDto) {
-        String email = jwtService.findEmailByJwt(token);
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+    public ReplyGetDto updateReply(String token, ReplyUpdateDto replyUpdateDto) {
+        Member member = jwtService.findMemberByToken(token);
         Reply reply = replyRepository.findById(replyUpdateDto.getReply_id()).orElseThrow(ReplyNotFoundException::new);
 
         checkMember(member, reply.getMember());
 
         reply.updateReply(replyUpdateDto.getContent());
 
-        return reply;
+        return ReplyGetDto.toDto(reply);
     }
 
     private void checkMember(Member member, Member writer) {

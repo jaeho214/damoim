@@ -7,12 +7,17 @@ import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.exception.MemberNotFoundException;
 import com.yeongjae.damoim.domain.member.repository.MemberRepository;
 import com.yeongjae.damoim.domain.reply.dto.ReplyCreateDto;
+import com.yeongjae.damoim.domain.reply.dto.ReplyGetDto;
 import com.yeongjae.damoim.domain.reply.entity.Reply;
 import com.yeongjae.damoim.domain.reply.repository.ReplyRepository;
 import com.yeongjae.damoim.global.jwt.JwtService;
+import com.yeongjae.damoim.global.notification.dto.NotificationType;
+import com.yeongjae.damoim.global.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
 
 @Service
 @Transactional
@@ -20,17 +25,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReplyCreateService {
 
     private final ReplyRepository replyRepository;
-    private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final JwtService jwtService;
+    private final NotificationService notificationService;
 
-    public Reply createReply(String token, ReplyCreateDto replyCreateDto) {
-        String email = jwtService.findEmailByJwt(token);
-
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+    public ReplyGetDto createReply(String token, ReplyCreateDto replyCreateDto) {
+        Member member = jwtService.findMemberByToken(token);
         Board board = boardRepository.findById(replyCreateDto.getBoard_id()).orElseThrow(BoardNotFoundException::new);
 
-        board.addReply(replyCreateDto.of(member, board));
-        return replyRepository.save(replyCreateDto.of(member, board));
+        //board.addReply(replyCreateDto.of(member, board));
+        Reply savedReply = replyRepository.save(replyCreateDto.of(member, board));
+
+        notificationService.sendNotification(Arrays.asList(savedReply.getBoard().getMember().getFcmToken()), member.getNickName(), NotificationType.REPLY);
+
+        return ReplyGetDto.toDto(savedReply);
     }
 }
