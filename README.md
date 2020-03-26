@@ -6,7 +6,7 @@
 
 ## 구현사항
 
-###Back end
+**Back end**
 
 **spring boot(REST API)**
 1. Spring Data JPA를 통한 DB 접근 및 관리
