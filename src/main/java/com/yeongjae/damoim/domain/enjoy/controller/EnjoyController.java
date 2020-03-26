@@ -11,6 +11,7 @@ import com.yeongjae.damoim.domain.enjoy.service.EnjoyUpdateService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -51,6 +52,22 @@ public class EnjoyController {
     public ResponseEntity getEnjoy(@RequestHeader("token") String token,
                                    @PathVariable Long enjoy_id){
         return ResponseEntity.ok().body(enjoyGetService.getEnjoy(token, enjoy_id));
+    }
+
+    @ApiOperation("키워드로 번개 모임 검색")
+    @GetMapping("/search/{location}/{keyword}")
+    public ResponseEntity searchEnjoyByKeyword(@PathVariable String location,
+                                               @PathVariable String keyword,
+                                               @RequestParam("pageNo") int pageNo){
+        return ResponseEntity.ok().body(enjoyGetService.searchByKeyword(location, keyword, pageNo));
+    }
+
+    @ApiOperation("카테고리별 번개 모임 검색")
+    @GetMapping("/category/{location}/{category}")
+    public ResponseEntity getEnjoyByCategory(@PathVariable String location,
+                                             @PathVariable String category,
+                                             @RequestParam("pageNo") int pageNo){
+        return ResponseEntity.ok().body(enjoyGetService.getEnjoyByCategory(location, category, pageNo));
     }
 
     @ApiOperation("번개 모임 내용 수정")

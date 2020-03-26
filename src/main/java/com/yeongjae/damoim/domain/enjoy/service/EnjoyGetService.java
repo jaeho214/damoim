@@ -5,6 +5,7 @@ import com.yeongjae.damoim.domain.enjoy.dto.EnjoyGetByMemberDto;
 import com.yeongjae.damoim.domain.enjoy.dto.EnjoyGetDto;
 import com.yeongjae.damoim.domain.enjoy.dto.EnjoyGetPagingDto;
 import com.yeongjae.damoim.domain.enjoy.entity.Enjoy;
+import com.yeongjae.damoim.domain.enjoy.entity.EnjoyCategory;
 import com.yeongjae.damoim.domain.enjoy.exception.EnjoyNotFoundException;
 import com.yeongjae.damoim.domain.enjoy.repository.EnjoyRepository;
 import com.yeongjae.damoim.domain.member.dto.MemberGetDto;
@@ -62,5 +63,19 @@ public class EnjoyGetService {
         Page<EnjoyGetByMemberDto> enjoyPages = enjoyRepository.findByMember(member, pageable);
 
         return EnjoyGetPagingDto.memberOf(enjoyPages);
+    }
+
+    public EnjoyGetPagingDto searchByKeyword(String location, String keyword, int pageNo) {
+        Pageable pageable = PageRequest.of(--pageNo * LIMIT, 10, Sort.Direction.DESC, "createdAt");
+        Page<EnjoyGetByLocationDto> enjoyPages = enjoyRepository.searchByKeyword(keyword, location, pageable);
+
+        return EnjoyGetPagingDto.locationOf(enjoyPages);
+    }
+
+    public EnjoyGetPagingDto getEnjoyByCategory(String location, String category, int pageNo){
+        Pageable pageable = PageRequest.of(--pageNo * LIMIT, 10, Sort.Direction.DESC, "createdAt");
+        Page<EnjoyGetByLocationDto> enjoyPages = enjoyRepository.findByCategory(EnjoyCategory.fromString(category), location, pageable);
+
+        return EnjoyGetPagingDto.locationOf(enjoyPages);
     }
 }

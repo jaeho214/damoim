@@ -4,6 +4,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.yeongjae.damoim.domain.enjoy.dto.EnjoyGetByLocationDto;
 import com.yeongjae.damoim.domain.enjoy.dto.EnjoyGetByMemberDto;
 import com.yeongjae.damoim.domain.enjoy.entity.Enjoy;
+import com.yeongjae.damoim.domain.enjoy.entity.EnjoyCategory;
 import com.yeongjae.damoim.domain.enjoy.entity.QEnjoy;
 import com.yeongjae.damoim.domain.member.entity.Member;
 import com.yeongjae.damoim.domain.member.entity.QMember;
@@ -53,25 +54,32 @@ public class EnjoyRepositoryImpl extends QuerydslRepositorySupport implements En
                 .innerJoin(enjoy.member, member).fetchJoin()
                 .where(enjoy.location.eq(location));
 
-        List<Enjoy> enjoyList = getQuerydsl()
-                .applyPagination(pageable, jpaQuery)
-                .fetch();
+        return transferToLocationDto(pageable, jpaQuery);
+    }
 
-        List<EnjoyGetByLocationDto> enjoyGetByLocationDtoList = new ArrayList<>();
-        enjoyList.forEach(enjoy ->
-                enjoyGetByLocationDtoList.add(
-                        EnjoyGetByLocationDto.builder()
-                        .id(enjoy.getId())
-                        .title(enjoy.getTitle())
-                        .category(enjoy.getCategory())
-                        .createdAt(enjoy.getCreatedAt())
-                        .hits(enjoy.getHits())
-                        .writer(enjoy.getMember().getNickName())
-                        .recruit(enjoy.getRecruit())
-                        .build()
-                )
-        );
-        return new PageImpl<>(enjoyGetByLocationDtoList, pageable, jpaQuery.fetchCount());
+    @Override
+    public Page<EnjoyGetByLocationDto> findByCategory(EnjoyCategory category, String location, Pageable pageable) {
+        JPAQuery<Enjoy> jpaQuery = new JPAQuery<>(entityManager);
+        jpaQuery = jpaQuery.select(enjoy)
+                .from(enjoy)
+                .innerJoin(enjoy.member, member).fetchJoin()
+                .where(enjoy.category.eq(category))
+                .where(enjoy.location.eq(location));
+
+        return transferToLocationDto(pageable, jpaQuery);
+    }
+
+    @Override
+    public Page<EnjoyGetByLocationDto> searchByKeyword(String keyword, String location, Pageable pageable) {
+        JPAQuery<Enjoy> jpaQuery = new JPAQuery<>(entityManager);
+        jpaQuery = jpaQuery.select(enjoy)
+                .from(enjoy)
+                .innerJoin(enjoy.member, member).fetchJoin()
+                .where(enjoy.title.contains(keyword))
+                .where(enjoy.location.eq(location));
+
+        return transferToLocationDto(pageable, jpaQuery);
+
     }
 
     @Override
@@ -81,9 +89,31 @@ public class EnjoyRepositoryImpl extends QuerydslRepositorySupport implements En
                 .from(enjoy)
                 .where(enjoy.member.eq(member));
 
-        List<Enjoy> enjoyList = getQuerydsl()
-                .applyPagination(pageable, jpaQuery)
-                .fetch();
+        return transferToMemberDto(pageable, jpaQuery);
+    }
+
+    private Page<EnjoyGetByLocationDto> transferToLocationDto(Pageable pageable,JPAQuery jpaQuery){
+        List<Enjoy> enjoyList = fetch(pageable, jpaQuery);
+
+        List<EnjoyGetByLocationDto> enjoyGetByLocationDtoList = new ArrayList<>();
+        enjoyList.forEach(enjoy ->
+                enjoyGetByLocationDtoList.add(
+                        EnjoyGetByLocationDto.builder()
+                                .id(enjoy.getId())
+                                .title(enjoy.getTitle())
+                                .category(enjoy.getCategory())
+                                .createdAt(enjoy.getCreatedAt())
+                                .hits(enjoy.getHits())
+                                .writer(enjoy.getMember().getNickName())
+                                .recruit(enjoy.getRecruit())
+                                .build()
+                )
+        );
+        return new PageImpl<>(enjoyGetByLocationDtoList, pageable, jpaQuery.fetchCount());
+    }
+
+    private Page<EnjoyGetByMemberDto> transferToMemberDto(Pageable pageable, JPAQuery jpaQuery){
+        List<Enjoy> enjoyList = fetch(pageable, jpaQuery);
 
         List<EnjoyGetByMemberDto> enjoyGetByMemberDtoList = new ArrayList<>();
         enjoyList.forEach(enjoy ->
@@ -99,5 +129,11 @@ public class EnjoyRepositoryImpl extends QuerydslRepositorySupport implements En
                 )
         );
         return new PageImpl<>(enjoyGetByMemberDtoList, pageable, jpaQuery.fetchCount());
+    }
+
+    private List<Enjoy> fetch(Pageable pageable, JPAQuery jpaQuery){
+        return getQuerydsl()
+                .applyPagination(pageable, jpaQuery)
+                .fetch();
     }
 }
