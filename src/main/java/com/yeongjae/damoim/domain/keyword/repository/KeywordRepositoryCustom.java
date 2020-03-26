@@ -8,5 +8,5 @@ import java.util.List;
 public interface KeywordRepositoryCustom {
     List<String> findDistinctKeywordAll();
     List<Keyword> findAllByMember(Member member);
-    List<String> findAllMemberByKeyword(String keyword);
+    List<String> findAllMemberByKeywordAndLocation(String keyword, String location);
 }

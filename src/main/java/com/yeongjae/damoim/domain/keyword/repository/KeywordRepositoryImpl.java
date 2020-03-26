@@ -52,7 +52,7 @@ public class KeywordRepositoryImpl extends QuerydslRepositorySupport implements 
     }
 
     @Override
-    public List<String> findAllMemberByKeyword(String keyword) {
+    public List<String> findAllMemberByKeywordAndLocation(String keyword, String location) {
         JPAQuery<Keyword> jpaQuery = new JPAQuery<>(entityManager);
 
         List<Keyword> keywords = jpaQuery.select(this.keyword)
@@ -60,6 +60,7 @@ public class KeywordRepositoryImpl extends QuerydslRepositorySupport implements 
                 .from(this.keyword)
                 .innerJoin(this.keyword.member, member).fetchJoin()
                 .where(this.keyword.keyword.eq(keyword))
+                .where(this.keyword.member.location.eq(location))
                 .fetch();
 
         List<String> tokens = new ArrayList<>();

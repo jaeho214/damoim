@@ -41,24 +41,24 @@ public class DealCreateService {
 
         if(dealCreateDto.getImagePaths() != null) {
             Deal savedDeal = dealImageCreateService.saveDealImage(dealCreateDto, deal);
-            sendNotification(savedDeal);
+            sendNotification(savedDeal, deal.getLocation());
             return DealGetDto.toDto(savedDeal);
         }
 
         Deal savedDeal = dealRepository.save(deal);
-        sendNotification(savedDeal);
+        sendNotification(savedDeal, deal.getLocation());
 
 
         return DealGetDto.toDto(savedDeal);
     }
 
-    private void sendNotification(Deal deal){
+    private void sendNotification(Deal deal, String location){
         List<String> keywordList = keywordRepository.findDistinctKeywordAll().stream()
                 .filter(keyword -> deal.getTitle().contains(keyword))
                 .collect(Collectors.toList());
 
         for(String keyword : keywordList){
-            List<String> tokenList = keywordRepository.findAllMemberByKeyword(keyword);
+            List<String> tokenList = keywordRepository.findAllMemberByKeywordAndLocation(keyword, location);
             notificationService.sendNotification(tokenList, keyword, NotificationType.KEYWORD);
         }
     }
