@@ -120,6 +120,34 @@ class EnjoyControllerTest {
     }
 
     @Test
+    void searchEnjoyByKeyword() throws Exception{
+        given(enjoyGetService.searchByKeyword(anyString(), anyString(), anyInt())).willReturn(enjoyGetPagingDtoFixture);
+
+        mockMvc.perform(
+                get("/damoim/enjoy/search/{location}/{keyword}", "경기도_시흥시", "키워드")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("token", "token")
+                .param("pageNo", String.valueOf(1))
+        )
+                .andExpect(status().isOk());
+    }
+
+//    @Test
+//    void getEnjoyByCategory() throws Exception{
+//        String location = "경기도 시흥시";
+//        String category = "카테고리";
+//        given(enjoyGetService.getEnjoyByCategory(anyString(), anyString(), anyInt())).willReturn(enjoyGetPagingDtoFixture);
+//
+//        mockMvc.perform(
+//                get("/damoim/enjoy/category/{location}/{category}", location, category)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .header("token", "token")
+//                .param("pageNo", String.valueOf(1))
+//        )
+//                .andExpect(status().isOk());
+//    }
+
+    @Test
     void updateEnjoy() throws Exception{
         given(enjoyUpdateService.updateEnjoy(anyString(),any(EnjoyUpdateDto.class))).willReturn(enjoyGetDtoFixture);
 

@@ -96,4 +96,30 @@ class EnjoyGetServiceTest {
         //then
         assertThat(enjoyList.getEnjoyGetByMemberDtoList().size()).isEqualTo(enjoyGetByMemberDtoPage.getSize());
     }
+
+    @Test
+    void searchByKeyword(){
+        //given
+        given(enjoyRepository.searchByKeyword(anyString(),anyString(),any())).willReturn(enjoyGetByLocationDtoPage);
+
+        //when
+        EnjoyGetPagingDto enjoyList = enjoyGetService.searchByKeyword("location", "keyword", 1);
+
+        //then
+        assertThat(enjoyList.getEnjoyGetByLocationDtoList().size()).isEqualTo(enjoyGetByLocationDtoPage.getSize());
+
+    }
+
+    @Test
+    void getEnjoyByCategory(){
+        //given
+        given(enjoyRepository.findByCategory(any(), anyString(), any())).willReturn(enjoyGetByLocationDtoPage);
+
+        //when
+        EnjoyGetPagingDto enjoyList = enjoyGetService.getEnjoyByCategory("location", "category", 1);
+
+        //then
+        assertThat(enjoyList.getEnjoyGetByLocationDtoList().size()).isEqualTo(enjoyGetByLocationDtoPage.getSize());
+
+    }
 }
