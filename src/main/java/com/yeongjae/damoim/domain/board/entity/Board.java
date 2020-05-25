@@ -19,7 +19,7 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-@Table(name = "board")
+@Table(name = "tbl_board")
 @Entity
 @AttributeOverride(name = "id", column = @Column(name = "board_id"))
 @Where(clause = "deleted=0")

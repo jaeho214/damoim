@@ -15,7 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-@Table(name = "reply")
+@Table(name = "tbl_reply")
 @Entity
 @AttributeOverride(name = "id", column = @Column(name = "reply_id"))
 @Where(clause = "deleted=0")

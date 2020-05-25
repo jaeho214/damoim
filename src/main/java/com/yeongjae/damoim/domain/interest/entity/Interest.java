@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Table(
-        name = "interest",
+        name = "tbl_interest",
         uniqueConstraints = {
             @UniqueConstraint(
                 columnNames = {"member_id", "deal_id"}

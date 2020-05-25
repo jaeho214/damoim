@@ -13,7 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-@Table(name = "boardImage")
+@Table(name = "tbl_boardImage")
 @Entity
 @AttributeOverride(name = "id", column = @Column(name = "boardImage_id"))
 @Where(clause = "deleted=0")

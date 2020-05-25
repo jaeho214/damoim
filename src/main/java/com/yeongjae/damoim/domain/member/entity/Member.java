@@ -16,7 +16,7 @@ import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter @Setter
-@Table(name = "member")
+@Table(name = "tbl_member")
 @Entity
 @AttributeOverride(name = "id", column = @Column(name = "member_id"))
 @Where(clause = "deleted=0")
@@ -28,7 +28,7 @@ public class Member extends JpaBasePersistable implements Serializable {
     private String nickName;
     @Column(name = "password" , length = 65)
     private String password;
-    @Column(name = "location", length = 50, nullable = false)
+    @Column(name = "location", length = 50)
     private String location;
     @Column(unique = true, name = "phone", length = 20, nullable = false)
     private String phone;
@@ -94,8 +94,8 @@ public class Member extends JpaBasePersistable implements Serializable {
         this.keywords.add(keyword);
     }
 
-    public void removeKeyword(Keyword keyword){
-
+    public void updatePassword(String password){
+        this.password = password;
     }
 
     public void updateToken(String token){

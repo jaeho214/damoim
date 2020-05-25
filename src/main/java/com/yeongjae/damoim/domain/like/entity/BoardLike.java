@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(
-        name = "boardLike",
+        name = "tbl_boardLike",
         uniqueConstraints = {
                 @UniqueConstraint(
                         columnNames = {"member_id", "board_id"}

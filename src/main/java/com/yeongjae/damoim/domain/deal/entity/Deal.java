@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-@Table(name = "deal")
+@Table(name = "tbl_deal")
 @Entity
 @AttributeOverride(name = "id", column = @Column(name = "deal_id"))
 @Where(clause = "deleted=0")

@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-@Table(name = "enjoy")
+@Table(name = "tbl_enjoy")
 @Entity
 @AttributeOverride(name = "id", column = @Column(name = "enjoy_id"))
 @Where(clause = "deleted=0")

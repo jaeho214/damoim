@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter @Setter
 @Entity
-@Table(name = "keyword")
+@Table(name = "tbl_keyword")
 public class Keyword {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
